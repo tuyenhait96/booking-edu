@@ -1,0 +1,1 @@
+export { GrowthInsight } from './GrowthInsight';

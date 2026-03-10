@@ -1,0 +1,1 @@
+export { UserProfileSnippet } from './UserProfileSnippet';

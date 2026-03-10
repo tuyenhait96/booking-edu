@@ -1,0 +1,1 @@
+export { DeleteRoleConfirmation } from './DeleteRoleConfirmation';

@@ -1,0 +1,102 @@
+"use client";
+
+import React, { useState } from 'react';
+import { cn } from "@/utils/cn";
+import { Icon } from "@/components/atoms/Icon";
+import Button from "@/components/atoms/Button";
+import { FilterTabs } from "@/components/molecules/FilterTabs/FilterTabs";
+import { DateNavigator } from "@/components/molecules/DateNavigator/DateNavigator";
+import { ScheduleGrid } from "@/components/organisms/ScheduleGrid/ScheduleGrid";
+import { ObjectiveCard } from "@/components/molecules/ObjectiveCard/ObjectiveCard";
+import { AddSessionModal } from "@/components/organisms/AddSessionModal/AddSessionModal";
+
+export default function SchedulePage() {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [currentDate, setCurrentDate] = useState(new Date(2023, 9, 16)); // Default to Oct 16, 2023 from design
+    const [activeTab, setActiveTab] = useState<'Weekly' | 'Daily' | 'Monthly'>('Weekly');
+
+    const getWeekRange = (date: Date) => {
+        const start = new Date(date);
+        // Find Monday of the current week
+        const day = start.getDay();
+        const diff = start.getDate() - day + (day === 0 ? -6 : 1);
+        start.setDate(diff);
+
+        const end = new Date(start);
+        end.setDate(start.getDate() + 6);
+
+        const options: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric' };
+        const startStr = start.toLocaleDateString('en-US', options);
+        const endStr = end.toLocaleDateString('en-US', options);
+
+        return `${startStr} - ${endStr}, ${end.getFullYear()}`;
+    };
+
+    const handlePrev = () => {
+        const newDate = new Date(currentDate);
+        if (activeTab === 'Weekly') newDate.setDate(newDate.getDate() - 7);
+        else if (activeTab === 'Daily') newDate.setDate(newDate.getDate() - 1);
+        else newDate.setMonth(newDate.getMonth() - 1);
+        setCurrentDate(newDate);
+    };
+
+    const handleNext = () => {
+        const newDate = new Date(currentDate);
+        if (activeTab === 'Weekly') newDate.setDate(newDate.getDate() + 7);
+        else if (activeTab === 'Daily') newDate.setDate(newDate.getDate() + 1);
+        else newDate.setMonth(newDate.getMonth() + 1);
+        setCurrentDate(newDate);
+    };
+
+    const handleToday = () => {
+        setCurrentDate(new Date());
+    };
+
+    return (
+        <div className="flex-1 flex flex-col overflow-y-auto animate-fade-in">
+            <div className="flex flex-col gap-6 mx-auto w-full">
+                {/* Page Header */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div className="flex flex-col gap-1">
+                        <h1 className="text-slate-900 dark:text-white text-3xl font-black tracking-tight">Schedule</h1>
+                        <p className="text-slate-500 dark:text-slate-400 text-base">
+                            Weekly timetable for Grade 10 - Section A • {currentDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+                        </p>
+                    </div>
+                    <div className="flex gap-3">
+                        <Button
+                            onClick={() => setIsModalOpen(true)}
+                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold shadow-sm hover:bg-primary/90 transition-all"
+                        >
+                            <Icon name="add" className="text-lg text-white" />
+                            <span>Add Session</span>
+                        </Button>
+                    </div>
+                </div>
+
+                {/* Filter / Navigation Bar */}
+                <div className="flex flex-col sm:flex-row justify-between bg-white dark:bg-slate-900 rounded-xl p-2 border border-slate-200 dark:border-slate-800 items-center gap-4">
+                    <FilterTabs
+                        activeTab={activeTab}
+                        onTabChange={setActiveTab}
+                    />
+                    <DateNavigator
+                        dateRange={activeTab === 'Weekly' ? getWeekRange(currentDate) : currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        onPrev={handlePrev}
+                        onNext={handleNext}
+                        onToday={handleToday}
+                    />
+                </div>
+
+                {/* Timetable Grid */}
+                <ScheduleGrid baseDate={currentDate} />
+            </div>
+
+            {/* Modal */}
+            <AddSessionModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
+        </div>
+    );
+}
