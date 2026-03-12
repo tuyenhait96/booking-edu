@@ -3,6 +3,7 @@ import { cn } from "@/utils/cn";
 import { DayHeader } from "@/components/atoms/DayHeader/DayHeader";
 import { TimeSlotLabel } from "@/components/atoms/TimeSlotLabel/TimeSlotLabel";
 import { ScheduleCard } from "@/components/molecules/ScheduleCard/ScheduleCard";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface ScheduleGridProps {
     className?: string;
@@ -10,6 +11,18 @@ interface ScheduleGridProps {
 }
 
 export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate }) => {
+    const { user } = useAuthStore();
+    
+    // Mock package-based filtering logic
+    const isRelevant = (category: string) => {
+        if (!user || user.role === 'Admin') return true;
+        // Example: Only show Science for "Science Pro" package users
+        if (category === 'PHYSICS' || category === 'CHEMISTRY') {
+            return user.email.includes('science') || user.role === 'Teacher';
+        }
+        return true;
+    };
+
     const getDaysOfWeek = (date: Date) => {
         const start = new Date(date);
         // Find Monday of the week containing the date
@@ -63,12 +76,15 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate 
                 <div className="grid grid-cols-8 h-28 border-b border-slate-50 dark:border-slate-800 relative">
                     <TimeSlotLabel time="08:00 AM" />
                     <div className="relative p-1 border-r border-slate-100 dark:border-slate-800">
-                        <ScheduleCard
-                            category="MATHEMATICS"
-                            title="Calculus Basics"
-                            location="Room 204"
-                            variant="primary"
-                        />
+                        {isRelevant('MATHEMATICS') && (
+                            <ScheduleCard
+                                category="MATHEMATICS"
+                                title="Calculus Basics"
+                                location="Room 204"
+                                variant="primary"
+                                capacity={{ current: 10, total: 12 }}
+                            />
+                        )}
                     </div>
                     <div className="p-1 border-r border-slate-100 dark:border-slate-800 bg-primary/5"></div>
                     <div className="p-1 border-r border-slate-100 dark:border-slate-800">
@@ -77,16 +93,20 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate 
                             title="Shakespeare"
                             location="Auditorium"
                             variant="emerald"
+                            capacity={{ current: 4, total: 12 }}
                         />
                     </div>
                     <div className="p-1 border-r border-slate-100 dark:border-slate-800"></div>
                     <div className="p-1 border-r border-slate-100 dark:border-slate-800">
-                        <ScheduleCard
-                            category="CHEMISTRY"
-                            title="Organic Bases"
-                            location="Lab 4"
-                            variant="amber"
-                        />
+                        {isRelevant('CHEMISTRY') && (
+                            <ScheduleCard
+                                category="CHEMISTRY"
+                                title="Organic Bases"
+                                location="Lab 4"
+                                variant="amber"
+                                capacity={{ current: 8, total: 10 }}
+                            />
+                        )}
                     </div>
                     <div className="p-1 border-r border-slate-100 dark:border-slate-800"></div>
                     <div className="p-1"></div>
@@ -102,6 +122,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate 
                             title="Physics Lab"
                             location="Science Hall"
                             isActive={true}
+                            capacity={{ current: 12, total: 12 }}
                         />
                     </div>
                     <div className="p-1 border-r border-slate-100 dark:border-slate-800">
@@ -110,6 +131,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate 
                             title="Modern Era"
                             location="Room 102"
                             variant="indigo"
+                            capacity={{ current: 6, total: 12 }}
                         />
                     </div>
                     <div className="p-1 border-r border-slate-100 dark:border-slate-800">
@@ -118,6 +140,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate 
                             title="Trigonometry"
                             location="Room 204"
                             variant="primary"
+                            capacity={{ current: 5, total: 12 }}
                         />
                     </div>
                     <div className="p-1 border-r border-slate-100 dark:border-slate-800"></div>
@@ -128,10 +151,10 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate 
                 {/* 11:00 AM Slot (Break) */}
                 <div className="grid grid-cols-8 h-12 border-b border-slate-50 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/20">
                     <div className="p-2 border-r border-slate-100 dark:border-slate-800 text-right">
-                        <span className="text-[10px] font-bold text-slate-400">11:00 AM</span>
+                        <span className="text-xs font-bold text-slate-400">11:00 AM</span>
                     </div>
                     <div className="col-span-7 flex items-center justify-center">
-                        <span className="text-[10px] font-black uppercase tracking-[0.2em] text-slate-300 dark:text-slate-600">
+                        <span className="text-xs font-black uppercase tracking-[0.2em] text-slate-300 dark:text-slate-600">
                             Recess / Short Break
                         </span>
                     </div>
@@ -146,6 +169,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate 
                             title="Team Sports"
                             location="Main Court"
                             variant="rose"
+                            capacity={{ current: 15, total: 20 }}
                         />
                     </div>
                     <div className="p-1 border-r border-slate-100 dark:border-slate-800 bg-primary/5"></div>
@@ -156,6 +180,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate 
                             title="Creative Writing"
                             location="Room 301"
                             variant="emerald"
+                            capacity={{ current: 3, total: 12 }}
                         />
                     </div>
                     <div className="p-1 border-r border-slate-100 dark:border-slate-800">
@@ -164,6 +189,7 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate 
                             title="Algorithms"
                             location="Comp Lab 2"
                             variant="violet"
+                            capacity={{ current: 11, total: 12 }}
                         />
                     </div>
                     <div className="p-1 border-r border-slate-100 dark:border-slate-800"></div>

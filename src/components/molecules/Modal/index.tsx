@@ -2,6 +2,7 @@
 
 import { cn } from "@/utils/cn";
 import { useEffect, useRef, ReactNode } from "react";
+import { Icon } from "@/components/atoms/Icon";
 
 interface ModalProps {
     isOpen: boolean;
@@ -89,9 +90,7 @@ export default function Modal({
                     className="absolute right-4 top-4 rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-600"
                     aria-label="Close modal"
                 >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
+                    <Icon name="close" className="h-5 w-5" />
                 </button>
 
                 {/* Body */}

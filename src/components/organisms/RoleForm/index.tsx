@@ -6,50 +6,23 @@ import FormField from '@/components/molecules/FormField';
 import Button from '@/components/atoms/Button';
 import { PermissionMatrix } from '@/components/molecules/PermissionMatrix';
 import { useRouter } from 'next/navigation';
-
-interface PermissionEntry {
-    module: string;
-    permissions: {
-        view: boolean;
-        create: boolean;
-        edit: boolean;
-        delete: boolean;
-    };
-}
+import { PERMISSION_GROUPS } from '@/utils/permissions';
 
 interface RoleFormValues {
     name: string;
     description: string;
-    permissions: PermissionEntry[];
+    permissions: string[]; // Updated to match granular permissions
 }
 
 interface RoleFormProps {
     initialData?: {
         name: string;
         description: string;
-        permissions: PermissionEntry[];
+        permissions: string[];
     };
     isEditMode?: boolean;
     roleId?: string;
 }
-
-const DEFAULT_MODULES = [
-    'Users',
-    'Tenants',
-    'Roles',
-    'Schedule',
-    'Settings'
-];
-
-const INITIAL_PERMISSIONS: PermissionEntry[] = DEFAULT_MODULES.map(module => ({
-    module,
-    permissions: {
-        view: false,
-        create: false,
-        edit: false,
-        delete: false
-    }
-}));
 
 export const RoleForm: React.FC<RoleFormProps> = ({
     initialData,
@@ -63,13 +36,16 @@ export const RoleForm: React.FC<RoleFormProps> = ({
         defaultValues: initialData || {
             name: '',
             description: '',
-            permissions: INITIAL_PERMISSIONS
+            permissions: [] // Start with empty permissions
         }
     });
 
     const onSubmit = async (data: RoleFormValues) => {
         setIsSubmitting(true);
         console.log('Submitting Role Data:', data);
+
+        // Map the array of permission keys to the format expected by the API if needed
+        // For now, we assume the API takes the array of strings directly
 
         if (isEditMode && roleId) {
             console.log('Updating role with ID:', roleId);

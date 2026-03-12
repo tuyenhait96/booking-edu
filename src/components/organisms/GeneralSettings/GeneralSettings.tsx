@@ -7,8 +7,14 @@ import Label from '@/components/atoms/Label';
 import { Icon } from '@/components/atoms/Icon';
 import Button from '@/components/atoms/Button';
 import { Select } from '@/components/atoms/Select';
+import { useCentreStore } from '@/store/useCentreStore';
+import { cn } from '@/utils/cn';
+import PermissionGuard from '@/components/auth/PermissionGuard';
+import { PERMISSIONS } from '@/utils/permissions';
 
 export const GeneralSettings: React.FC = () => {
+    const { isMaintenanceMode, toggleMaintenanceMode } = useCentreStore();
+
     return (
         <SettingsSection
             title="General Settings"
@@ -49,6 +55,36 @@ export const GeneralSettings: React.FC = () => {
                     ]}
                 />
             </div>
+            <PermissionGuard requiredPermission={PERMISSIONS.SYSTEM_MAINTENANCE_MANAGE}>
+                <div className="flex flex-col gap-4 p-6 bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 rounded-2xl">
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="size-10 rounded-xl bg-rose-500 text-white flex items-center justify-center">
+                                <Icon name="construction" className="text-xl" />
+                            </div>
+                            <div>
+                                <p className="text-sm font-bold text-rose-900 dark:text-rose-100">Maintenance Mode</p>
+                                <p className="text-xs text-rose-600 dark:text-rose-400">Lock out non-admin users during system updates.</p>
+                            </div>
+                        </div>
+                        <button
+                            onClick={() => toggleMaintenanceMode(!isMaintenanceMode)}
+                            className={cn(
+                                "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2",
+                                isMaintenanceMode ? "bg-rose-500" : "bg-slate-200 dark:bg-slate-700"
+                            )}
+                        >
+                            <span className="sr-only">Toggle Maintenance Mode</span>
+                            <span
+                                className={cn(
+                                    "inline-block h-4 w-4 transform rounded-full bg-white transition-transform",
+                                    isMaintenanceMode ? "translate-x-6" : "translate-x-1"
+                                )}
+                            />
+                        </button>
+                    </div>
+                </div>
+            </PermissionGuard>
         </SettingsSection>
     );
 };

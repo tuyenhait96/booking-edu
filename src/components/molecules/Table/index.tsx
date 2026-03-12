@@ -105,6 +105,7 @@ interface DataTableProps<T> {
     };
     className?: string;
     containerClassName?: string;
+    onRowClick?: (item: T) => void;
 }
 
 export function DataTable<T>({
@@ -112,7 +113,8 @@ export function DataTable<T>({
     columns,
     pagination,
     className,
-    containerClassName
+    containerClassName,
+    onRowClick
 }: DataTableProps<T>) {
     return (
         <div className={cn("bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 shadow-sm overflow-hidden", containerClassName)}>
@@ -127,7 +129,10 @@ export function DataTable<T>({
                 <TBody>
                     {data.length > 0 ? (
                         data.map((item, rowIdx) => (
-                            <TR key={rowIdx}>
+                            <TR 
+                                key={rowIdx} 
+                                onClick={onRowClick ? () => onRowClick(item) : undefined}
+                            >
                                 {columns.map((col, colIdx) => (
                                     <TD key={colIdx} className={col.className}>
                                         {col.render(item, rowIdx)}

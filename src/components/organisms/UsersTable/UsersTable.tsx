@@ -8,6 +8,7 @@ import Badge from '@/components/atoms/Badge';
 import { Icon } from '@/components/atoms/Icon';
 import EditUserModal from '@/components/organisms/EditUserModal';
 import DeleteUserModal from '@/components/organisms/DeleteUserModal';
+import { UserProfilePanel } from '@/components/molecules/UserProfilePanel/UserProfilePanel';
 
 interface UserData {
     id: string;
@@ -18,6 +19,8 @@ interface UserData {
     tenant: string;
     status: 'active' | 'inactive' | 'pending';
     lastLogin: string;
+    absences?: number;
+    linkedChildren?: { id: string; name: string; avatarUrl?: string }[];
 }
 
 const USERS_DATA: UserData[] = [
@@ -40,6 +43,11 @@ const USERS_DATA: UserData[] = [
         tenant: 'Pinehurst Academy',
         status: 'active',
         lastLogin: 'Yesterday, 4:15 PM',
+        absences: 0,
+        linkedChildren: [
+            { id: '101', name: 'Lily Miller' },
+            { id: '102', name: 'Leo Miller' }
+        ]
     },
     {
         id: '3',
@@ -70,6 +78,7 @@ const USERS_DATA: UserData[] = [
         tenant: 'Oakwood International',
         status: 'active',
         lastLogin: '1 hour ago',
+        absences: 4,
     },
     {
         id: '6',
@@ -80,12 +89,17 @@ const USERS_DATA: UserData[] = [
         tenant: 'Oakwood International',
         status: 'active',
         lastLogin: '30 mins ago',
+        absences: 7,
     },
 ];
+
+import PermissionGuard from '@/components/auth/PermissionGuard';
+import { PERMISSIONS } from '@/utils/permissions';
 
 export const UsersTable: React.FC = () => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [isProfilePanelOpen, setIsProfilePanelOpen] = useState(false);
     const [selectedUser, setSelectedUser] = useState<UserData | null>(null);
 
     const handleEditClick = (user: UserData) => {
@@ -112,6 +126,16 @@ export const UsersTable: React.FC = () => {
         // Here you would typically make an API call to delete the user
         console.log("User deleted:", selectedUser);
         // You might want to update the USERS_DATA array or refetch data
+    };
+
+    const handleRowClick = (user: UserData) => {
+        setSelectedUser(user);
+        setIsProfilePanelOpen(true);
+    };
+
+    const handleCloseProfilePanel = () => {
+        setIsProfilePanelOpen(false);
+        // Don't null selectedUser immediately to allow exit animation
     };
 
     const columns: Column<UserData>[] = [
@@ -153,23 +177,28 @@ export const UsersTable: React.FC = () => {
             className: "text-right",
             render: (item) => (
                 <div className="flex justify-end gap-2">
-                    {/* Only show edit button for Student and Teacher roles */}
+                    {/* Only show edit button for Student and Teacher roles AND if user has permission */}
                     {(item.role === 'Student' || item.role === 'Teacher') && (
-                        <button
-                            onClick={() => handleEditClick(item)}
-                            className="text-slate-400 hover:text-primary transition-colors p-1"
-                            title="Edit user"
-                        >
-                            <Icon name="edit" className="text-lg" />
-                        </button>
+                        <PermissionGuard requiredPermission={PERMISSIONS.USER_UPDATE}>
+                            <button
+                                onClick={() => handleEditClick(item)}
+                                className="text-slate-400 hover:text-primary transition-colors p-1"
+                                title="Edit user"
+                            >
+                                <Icon name="edit" className="text-lg" />
+                            </button>
+                        </PermissionGuard>
                     )}
-                    <button
-                        onClick={() => handleDeleteClick(item)}
-                        className="text-slate-400 hover:text-red-600 transition-colors p-1"
-                        title="Delete user"
-                    >
-                        <Icon name="delete" className="text-lg" />
-                    </button>
+                    
+                    <PermissionGuard requiredPermission={PERMISSIONS.USER_DELETE}>
+                        <button
+                            onClick={() => handleDeleteClick(item)}
+                            className="text-slate-400 hover:text-red-600 transition-colors p-1"
+                            title="Delete user"
+                        >
+                            <Icon name="delete" className="text-lg" />
+                        </button>
+                    </PermissionGuard>
                 </div>
             ),
         },
@@ -180,6 +209,7 @@ export const UsersTable: React.FC = () => {
             <DataTable
                 data={USERS_DATA}
                 columns={columns}
+                onRowClick={handleRowClick}
                 pagination={{
                     currentPage: 1,
                     totalPages: 32,
@@ -188,6 +218,12 @@ export const UsersTable: React.FC = () => {
                     unit: 'users',
                     onPageChange: (page) => console.log(`Page: ${page}`),
                 }}
+            />
+
+            <UserProfilePanel 
+                isOpen={isProfilePanelOpen}
+                onClose={handleCloseProfilePanel}
+                user={selectedUser}
             />
 
             <EditUserModal

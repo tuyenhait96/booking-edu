@@ -22,6 +22,8 @@ export const UsersFilterBar: React.FC = () => {
                         { value: 'teacher', label: 'Teacher' },
                         { value: 'parent', label: 'Parent' },
                         { value: 'student', label: 'Student' },
+                        { value: 'trial', label: '1 Month Trial' },
+                        { value: 'unlimited-plus', label: 'Unlimited Plus' },
                     ]}
                 />
                 <Select

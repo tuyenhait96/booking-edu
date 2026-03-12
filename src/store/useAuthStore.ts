@@ -7,6 +7,12 @@ export interface User {
     email: string;
     role: string;
     avatar?: string;
+    permissions: string[];
+    linkedChildrenIds?: string[];
+    attendanceStats?: {
+        bookedThisWeek: number;
+        attendancePercentage: number;
+    };
 }
 
 interface AuthState {

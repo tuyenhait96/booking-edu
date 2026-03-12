@@ -14,7 +14,7 @@ export const DayHeader: React.FC<DayHeaderProps> = ({ day, date, isActive = fals
             isActive && "bg-primary/5"
         )}>
             <p className={cn(
-                "text-[10px] font-bold uppercase",
+                "text-xs font-bold uppercase",
                 isActive ? "text-primary" : "text-slate-400"
             )}>
                 {day}

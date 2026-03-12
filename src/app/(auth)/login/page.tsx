@@ -3,13 +3,57 @@
 import LoginCard from "@/components/organisms/LoginCard";
 import LoginFooter from "@/components/organisms/LoginFooter";
 import LoginHeader from "@/components/organisms/LoginHeader";
-import { FormEvent } from "react";
+import { FormEvent, useState } from "react";
+import authService from "@/services/authService";
+import { useAuthStore } from "@/store/useAuthStore";
+import { useRouter } from "next/navigation";
 
 export default function EduCMSLoginPage() {
-    const handleLogin = (e: FormEvent) => {
+    const router = useRouter();
+    const login = useAuthStore((state) => state.login);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
+    const handleLogin = async (e: FormEvent) => {
         e.preventDefault();
-        // In a real app, wire up the form data to an auth service here
-        console.log("Login submitted");
+        setIsLoading(true);
+        setError(null);
+
+        const formData = new FormData(e.target as HTMLFormElement);
+        const email = formData.get("email") as string;
+        const password = formData.get("password") as string;
+
+        try {
+            const response = await authService.login({ email, password });
+            
+            if (response.data) {
+                const { user, accessToken } = response.data;
+                // Map the login response user to our store's User type
+                login({
+                    id: user.id,
+                    email: user.email,
+                    role: user.role,
+                    permissions: user.permissions,
+                    name: user.email.split("@")[0], // Fallback name
+                }, accessToken);
+
+                // Store tokens in localStorage for the axios interceptor
+                localStorage.setItem("access_token", accessToken);
+
+                // Set cookie for middleware route protection
+                // Set for 1 day (align with token expiry if possible)
+                const expires = new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString();
+                document.cookie = `session_token=${accessToken}; path=/; expires=${expires}; SameSite=Strict; Secure`;
+                
+                router.push("/dashboard");
+            } else {
+                setError(response.error || "Login failed");
+            }
+        } catch (err: any) {
+            setError(err.response?.data?.message || "An error occurred during login");
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     return (
@@ -17,7 +61,14 @@ export default function EduCMSLoginPage() {
             <LoginHeader />
 
             <main className="flex-1 flex items-center justify-center p-6">
-                <LoginCard onSubmit={handleLogin} />
+                <div className="w-full max-w-md">
+                    {error && (
+                        <div className="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                            {error}
+                        </div>
+                    )}
+                    <LoginCard onSubmit={handleLogin} />
+                </div>
             </main>
 
             <LoginFooter />

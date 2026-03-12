@@ -3,6 +3,9 @@ import { Icon } from '@/components/atoms/Icon';
 import Link from 'next/link';
 import Button from '@/components/atoms/Button';
 
+import PermissionGuard from '@/components/auth/PermissionGuard';
+import { PERMISSIONS } from '@/utils/permissions';
+
 export const RolesPageHeader: React.FC = () => {
     return (
         <div className="flex items-end justify-between">
@@ -12,12 +15,15 @@ export const RolesPageHeader: React.FC = () => {
                     Configure and manage system-wide access levels, functional permissions, and security roles for all users.
                 </p>
             </div>
-            <Link href="/roles/add">
-                <Button className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg font-bold hover:bg-primary/90 transition-all shadow-sm hover:shadow-md">
-                    <Icon name="add" className="text-xl" />
-                    <span>Add New Role</span>
-                </Button>
-            </Link>
+
+            <PermissionGuard requiredPermission={PERMISSIONS.SYSTEM_SETTINGS_MANAGE}>
+                <Link href="/roles/add">
+                    <Button className="flex items-center gap-2 px-5 py-2.5 bg-primary text-white rounded-lg font-bold hover:bg-primary/90 transition-all shadow-sm hover:shadow-md">
+                        <Icon name="add" className="text-xl" />
+                        <span>Add New Role</span>
+                    </Button>
+                </Link>
+            </PermissionGuard>
         </div>
     );
 };

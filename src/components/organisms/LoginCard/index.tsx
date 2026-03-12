@@ -7,7 +7,7 @@ import Link from "next/link";
 import { FormEvent } from "react";
 import { cn } from "@/utils/cn";
 import Button from "@/components/atoms/Button";
-import { HiOutlineMail, HiOutlineLogin } from "react-icons/hi";
+import { Icon } from "@/components/atoms/Icon";
 
 interface LoginCardProps {
     onSubmit?: (e: FormEvent) => void;
@@ -44,7 +44,7 @@ export default function LoginCard({ onSubmit, className }: LoginCardProps) {
                             required
                             className="py-3 bg-background-light dark:bg-slate-800 border-slate-200 dark:border-slate-700 placeholder-slate-400 dark:placeholder-slate-500"
                             leftIcon={
-                                <HiOutlineMail className="text-slate-400 text-lg" />
+                                <Icon name="mail" className="text-slate-400 text-lg" />
                             }
                         />
                     </div>
@@ -84,7 +84,7 @@ export default function LoginCard({ onSubmit, className }: LoginCardProps) {
                         className="py-3 shadow-sm rounded-lg h-auto"
                     >
                         Sign In
-                        <HiOutlineLogin className="text-lg" />
+                        <Icon name="login" className="text-lg" />
                     </Button>
                 </form>
             </div>

@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { cn } from "@/utils/cn";
-import { HiOutlineAcademicCap } from "react-icons/hi2";
+import { Icon } from "@/components/atoms/Icon";
 
 interface LoginHeaderProps {
     className?: string;
@@ -18,7 +18,7 @@ export default function LoginHeader({ className }: LoginHeaderProps) {
         >
             <div className="flex items-center gap-2">
                 <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white">
-                    <HiOutlineAcademicCap className="text-xl" />
+                    <Icon name="school" className="text-xl" />
                 </div>
                 <span className="text-xl font-bold tracking-tight text-slate-900 dark:text-white">
                     EduCMS

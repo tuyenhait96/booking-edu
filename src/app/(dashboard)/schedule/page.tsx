@@ -9,6 +9,8 @@ import { DateNavigator } from "@/components/molecules/DateNavigator/DateNavigato
 import { ScheduleGrid } from "@/components/organisms/ScheduleGrid/ScheduleGrid";
 import { ObjectiveCard } from "@/components/molecules/ObjectiveCard/ObjectiveCard";
 import { AddSessionModal } from "@/components/organisms/AddSessionModal/AddSessionModal";
+import PermissionGuard from '@/components/auth/PermissionGuard';
+import { PERMISSIONS } from '@/utils/permissions';
 
 export default function SchedulePage() {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -64,13 +66,32 @@ export default function SchedulePage() {
                         </p>
                     </div>
                     <div className="flex gap-3">
-                        <Button
-                            onClick={() => setIsModalOpen(true)}
-                            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold shadow-sm hover:bg-primary/90 transition-all"
-                        >
-                            <Icon name="add" className="text-lg text-white" />
-                            <span>Add Session</span>
-                        </Button>
+                        <div className="flex bg-slate-100 dark:bg-slate-800 p-1 rounded-lg">
+                            <PermissionGuard requiredPermission={PERMISSIONS.BOOKING_RULES_MANAGE}>
+                                <Button variant="ghost" className="px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+                                    Turn On Bookings
+                                </Button>
+                            </PermissionGuard>
+                            <PermissionGuard requiredPermission={PERMISSIONS.BOOKING_RULES_MANAGE}>
+                                <Button variant="ghost" className="px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-rose-500 transition-colors">
+                                    Turn Off All
+                                </Button>
+                            </PermissionGuard>
+                            <PermissionGuard requiredPermission={PERMISSIONS.BOOKING_RULES_MANAGE}>
+                                <Button variant="ghost" className="px-3 py-1 text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 hover:text-amber-500 transition-colors">
+                                    Clear Students
+                                </Button>
+                            </PermissionGuard>
+                        </div>
+                        <PermissionGuard requiredPermission={PERMISSIONS.BOOKING_CREATE}>
+                            <Button
+                                onClick={() => setIsModalOpen(true)}
+                                className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-bold shadow-sm hover:bg-primary/90 transition-all"
+                            >
+                                <Icon name="add" className="text-lg text-white" />
+                                <span>Add Session</span>
+                            </Button>
+                        </PermissionGuard>
                     </div>
                 </div>
 

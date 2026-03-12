@@ -4,6 +4,8 @@ import { Icon } from "@/components/atoms/Icon";
 import Button from "@/components/atoms/Button";
 import Input from "@/components/atoms/Input";
 import { Select } from "@/components/atoms/Select";
+import { useCentreStore } from "@/store/useCentreStore";
+import { useAuthStore } from "@/store/useAuthStore";
 
 interface AddSessionModalProps {
     isOpen: boolean;
@@ -11,7 +13,32 @@ interface AddSessionModalProps {
 }
 
 export const AddSessionModal: React.FC<AddSessionModalProps> = ({ isOpen, onClose }) => {
+    const { currentCentre } = useCentreStore();
+    const { user } = useAuthStore();
+    const [capacity, setCapacity] = React.useState(0);
+    const [hasConflict, setHasConflict] = React.useState(false);
+    const [error, setError] = React.useState<string | null>(null);
+
     if (!isOpen) return null;
+
+    const threshold = currentCentre.name === 'Tampines' ? 14 : 12;
+    const shouldSplit = capacity >= threshold;
+
+    const handleAddSession = () => {
+        // Mock restriction check
+        if (user?.role === 'Parent' && capacity > 1) { // Simplified for demo
+             setError("Your account is restricted to booking only 1 class at a time.");
+             return;
+        }
+
+        // Mock conflict check
+        if (hasConflict) {
+            setError("Scheduling overlap detected! Please resolve before proceeding.");
+            return;
+        }
+
+        onClose();
+    };
 
     const days = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -107,8 +134,53 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ isOpen, onClos
                         </div>
                         <div className="flex flex-col gap-1.5">
                             <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">End Time</label>
-                            <Input type="time" className="w-full" />
+                            <Input type="time" className="w-full" onChange={() => setHasConflict(Math.random() > 0.8)} />
                         </div>
+                    </div>
+
+                    {/* Conflict & Split Warnings */}
+                    <div className="space-y-3">
+                        {hasConflict && (
+                            <div className="p-3 bg-rose-50 dark:bg-rose-500/10 border border-rose-100 dark:border-rose-500/20 rounded-xl flex items-center gap-3 text-rose-600 animate-pulse">
+                                <Icon name="warning" className="text-lg" />
+                                <span className="text-xs font-bold">Conflict detected: Instructor is busy at this time.</span>
+                            </div>
+                        )}
+                        
+                        <div className="flex flex-col gap-1.5">
+                            <label className="text-sm font-semibold text-slate-700 dark:text-slate-300">Projected Capacity</label>
+                            <Input 
+                                type="number" 
+                                value={capacity} 
+                                onChange={(e) => setCapacity(parseInt(e.target.value) || 0)}
+                                className={cn("w-full", shouldSplit && "border-amber-500")}
+                            />
+                        </div>
+
+                        {shouldSplit && (
+                            <div className="p-4 bg-amber-50 dark:bg-amber-500/10 border border-amber-100 dark:border-amber-500/20 rounded-2xl flex gap-3">
+                                <div className="size-8 rounded-lg bg-amber-500 text-white flex items-center justify-center shrink-0">
+                                    <Icon name="call_split" className="text-lg" />
+                                </div>
+                                <div>
+                                    <h4 className="text-xs font-black text-amber-900 dark:text-amber-100 uppercase tracking-tight">Capacity Threshold Hit</h4>
+                                    <p className="text-[10px] text-amber-700 dark:text-amber-400 mt-0.5 leading-relaxed">
+                                        This class exceeds {threshold} students for {currentCentre.name}. 
+                                        <strong> Automatic split is recommended.</strong>
+                                    </p>
+                                    <Button variant="ghost" className="mt-2 text-[10px] font-black uppercase text-amber-600 hover:bg-amber-100 p-0 h-auto">
+                                        Split into 2 Classes
+                                    </Button>
+                                </div>
+                            </div>
+                        )}
+
+                        {error && (
+                            <div className="p-3 bg-rose-500 text-white rounded-xl flex items-center gap-3 shadow-lg shadow-rose-500/20">
+                                <Icon name="error" className="text-lg" />
+                                <span className="text-xs font-bold">{error}</span>
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -121,7 +193,7 @@ export const AddSessionModal: React.FC<AddSessionModalProps> = ({ isOpen, onClos
                         Cancel
                     </button>
                     <Button
-                        onClick={onClose}
+                        onClick={handleAddSession}
                         className="px-6 py-2 bg-primary hover:bg-primary/90 text-white rounded-lg text-sm font-bold shadow-md shadow-primary/20 transition-all flex items-center gap-2"
                     >
                         <Icon name="add" className="text-sm text-white" />

@@ -24,7 +24,7 @@ const ROLES_DATA: RoleData[] = [
         name: 'Super Admin',
         description: 'Master access to all system modules, configurations, and logs.',
         activeUsers: 2,
-        permissions: ['Users', 'Full User MGMT', '+12 more'],
+        permissions: [PERMISSIONS.USER_VIEW, PERMISSIONS.SYSTEM_SETTINGS_MANAGE, 'all'],
         icon: 'security',
         color: 'red',
     },
@@ -33,7 +33,7 @@ const ROLES_DATA: RoleData[] = [
         name: 'School Admin',
         description: 'Manage individual school operations, staff, and student enrollments.',
         activeUsers: 12,
-        permissions: ['School Settings'],
+        permissions: [PERMISSIONS.CURRICULUM_MANAGE, PERMISSIONS.BOOKING_VIEW],
         icon: 'corporate_fare',
         color: 'blue',
     },
@@ -42,7 +42,7 @@ const ROLES_DATA: RoleData[] = [
         name: 'Teacher',
         description: 'Access to classrooms, grading, attendance, and student progress reports.',
         activeUsers: 150,
-        permissions: ['Curriculum', 'Grading'],
+        permissions: [PERMISSIONS.CURRICULUM_VIEW, PERMISSIONS.ATTENDANCE_ABSENCE_MONITOR],
         icon: 'person_pin',
         color: 'emerald',
     },
@@ -51,11 +51,14 @@ const ROLES_DATA: RoleData[] = [
         name: 'Parent',
         description: "View child's academic performance, schedule, and school announcements.",
         activeUsers: 800,
-        permissions: ['Student View', 'Payments'],
+        permissions: [PERMISSIONS.CALENDAR_VIEW, PERMISSIONS.NOTIFICATION_VIEW],
         icon: 'family_restroom',
         color: 'amber',
     },
 ];
+
+import PermissionGuard from '@/components/auth/PermissionGuard';
+import { PERMISSIONS } from '@/utils/permissions';
 
 export const RolesTable: React.FC = () => {
     const router = useRouter();
@@ -122,20 +125,25 @@ export const RolesTable: React.FC = () => {
             className: "text-right",
             render: (item) => (
                 <div className="flex justify-end gap-1">
-                    <button
-                        className="p-2 text-slate-400 hover:text-primary transition-colors"
-                        onClick={() => handleEditClick(item)}
-                        aria-label={`Edit ${item.name}`}
-                    >
-                        <Icon name="edit" />
-                    </button>
-                    <button
-                        className="p-2 text-slate-400 hover:text-red-500 transition-colors"
-                        onClick={() => handleDeleteClick(item)}
-                        aria-label={`Delete ${item.name}`}
-                    >
-                        <Icon name="delete" />
-                    </button>
+                    <PermissionGuard requiredPermission={PERMISSIONS.SYSTEM_SETTINGS_MANAGE}>
+                        <button
+                            className="p-2 text-slate-400 hover:text-primary transition-colors"
+                            onClick={() => handleEditClick(item)}
+                            aria-label={`Edit ${item.name}`}
+                        >
+                            <Icon name="edit" />
+                        </button>
+                    </PermissionGuard>
+                    
+                    <PermissionGuard requiredPermission={PERMISSIONS.SYSTEM_SETTINGS_MANAGE}>
+                        <button
+                            className="p-2 text-slate-400 hover:text-red-500 transition-colors"
+                            onClick={() => handleDeleteClick(item)}
+                            aria-label={`Delete ${item.name}`}
+                        >
+                            <Icon name="delete" />
+                        </button>
+                    </PermissionGuard>
                 </div>
             ),
         },

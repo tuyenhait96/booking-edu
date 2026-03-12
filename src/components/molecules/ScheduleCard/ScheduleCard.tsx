@@ -8,6 +8,10 @@ interface ScheduleCardProps {
     category: string;
     title: string;
     location: string;
+    capacity?: {
+        current: number;
+        total: number;
+    };
     variant?: ScheduleVariant;
     isActive?: boolean;
     className?: string;
@@ -26,6 +30,7 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
     category,
     title,
     location,
+    capacity,
     variant = "primary",
     isActive = false,
     className
@@ -36,11 +41,14 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
                 "h-full rounded-lg bg-primary border-l-4 border-primary/80 p-2 flex flex-col gap-1 text-white shadow-lg shadow-primary/20",
                 className
             )}>
-                <p className="text-[10px] font-bold opacity-80 uppercase">Active Session</p>
-                <p className="text-[11px] font-bold truncate">{title}</p>
+                <p className="text-xs font-bold opacity-80 uppercase">Active Session</p>
+                <div className="flex justify-between items-start">
+                    <p className="text-[11px] font-bold truncate">{title}</p>
+                    {capacity && <span className="text-xs font-black bg-white/20 px-1 rounded">{capacity.current}/{capacity.total}</span>}
+                </div>
                 <div className="flex items-center gap-1 mt-auto">
                     <Icon name="location_on" className="text-[14px] text-white/80" />
-                    <span className="text-[9px] font-medium opacity-80">{location}</span>
+                    <span className="text-xs font-medium opacity-80">{location}</span>
                 </div>
             </div>
         );
@@ -52,11 +60,14 @@ export const ScheduleCard: React.FC<ScheduleCardProps> = ({
             variantStyles[variant],
             className
         )}>
-            <p className="text-[10px] font-bold uppercase truncate">{category}</p>
+            <div className="flex justify-between items-start">
+                <p className="text-xs font-bold uppercase truncate">{category}</p>
+                {capacity && <span className={cn("text-xs font-black px-1 rounded", isActive ? "bg-white/20" : "bg-black/5")}>{capacity.current}/{capacity.total}</span>}
+            </div>
             <p className="text-[11px] font-bold text-slate-800 dark:text-white truncate">{title}</p>
             <div className="flex items-center gap-1 mt-auto">
                 <Icon name="location_on" className="text-[14px] text-slate-400" />
-                <span className="text-[9px] font-medium text-slate-500">{location}</span>
+                <span className="text-xs font-medium text-slate-500">{location}</span>
             </div>
         </div>
     );

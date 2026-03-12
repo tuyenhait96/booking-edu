@@ -33,7 +33,7 @@ export const ObjectiveCard: React.FC<ObjectiveCardProps> = ({
             </div>
             <div>
                 <p className="text-xs font-bold text-slate-900 dark:text-white">{title}</p>
-                <p className="text-[11px] text-slate-500 leading-relaxed dark:text-slate-400">
+                <p className="text-xs text-slate-500 leading-relaxed dark:text-slate-400">
                     {description}
                 </p>
             </div>
