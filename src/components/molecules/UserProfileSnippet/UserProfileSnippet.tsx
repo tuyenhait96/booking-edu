@@ -17,20 +17,20 @@ export const UserProfileSnippet: React.FC<UserProfileSnippetProps> = ({
     onLogout
 }) => {
     return (
-        <div className={cn("bg-slate-50 dark:bg-slate-800/50 rounded-xl p-4 flex items-center gap-3")}>
-            <div className="size-10 rounded-full bg-primary/20 flex items-center justify-center text-primary overflow-hidden shrink-0">
+        <div className={cn("bg-white/5 rounded-xl p-4 flex items-center gap-3")}>
+            <div className="size-10 rounded-full bg-white/10 flex items-center justify-center text-white overflow-hidden shrink-0">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img className="w-full h-full object-cover" alt={`${name} profile picture`} src={avatarUrl} />
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold truncate">{name}</p>
-                <p className="text-xs text-slate-500 truncate">{role}</p>
+                <p className="text-sm font-semibold truncate text-white">{name}</p>
+                <p className="text-xs text-white/50 truncate">{role}</p>
             </div>
             <Button
                 variant="ghost"
                 size="sm"
                 onClick={onLogout}
-                className="h-8 w-8 p-0 text-slate-400 hover:text-primary shrink-0"
+                className="hover:bg-white/10 transition-colors h-8 w-8 p-0 text-white/40 hover:text-white shrink-0"
             >
                 <Icon name="logout" className="text-[20px]" />
             </Button>

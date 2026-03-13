@@ -140,8 +140,8 @@ export function DataTable<T>({
                         </TR>
                     ) : data.length > 0 ? (
                         data.map((item, rowIdx) => (
-                            <TR 
-                                key={rowIdx} 
+                            <TR
+                                key={rowIdx}
                                 onClick={onRowClick ? () => onRowClick(item) : undefined}
                             >
                                 {columns.map((col, colIdx) => (

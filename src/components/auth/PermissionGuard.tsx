@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode } from "react";
+import { ReactNode, useState, useEffect } from "react";
 import { usePermission } from "@/hooks/usePermission";
 import { Permission } from "@/utils/permissions";
 import { Icon } from "@/components/atoms/Icon";
@@ -22,7 +22,18 @@ export default function PermissionGuard({
     showMessage = false,
     fallback = null,
 }: PermissionGuardProps) {
+    const [hasMounted, setHasMounted] = useState(false);
     const { hasPermission, hasAllPermissions, hasAnyPermission } = usePermission();
+
+    useEffect(() => {
+        setHasMounted(true);
+    }, []);
+
+    // During SSR and initial client render, show nothing or fallback to avoid hydration mismatch
+    // This is because usePermission depends on authStore which is persisted in localStorage
+    if (!hasMounted) {
+        return null;
+    }
 
     // If no permissions required, just show children
     if (!requiredPermission && (!requiredPermissions || requiredPermissions.length === 0)) {

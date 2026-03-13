@@ -21,27 +21,27 @@ export const CentreSwitcher: React.FC = () => {
                 className={cn(
                     "w-full flex items-center justify-between p-3 rounded-xl border transition-all duration-300 group",
                     isOpen 
-                        ? "bg-primary border-primary shadow-lg shadow-primary/20" 
-                        : "bg-slate-50 dark:bg-slate-800/50 border-slate-100 dark:border-slate-800 hover:border-primary/50"
+                        ? "bg-white/20 border-white/20 shadow-lg" 
+                        : "bg-white/10 border-white/10 hover:border-white/30"
                 )}
             >
                 <div className="flex items-center gap-3">
                     <div className={cn(
                         "size-8 rounded-lg flex items-center justify-center shrink-0 transition-colors",
-                        isOpen ? "bg-white/20 text-white" : "bg-primary/10 text-primary"
+                        isOpen ? "bg-white/20 text-white" : "bg-white/10 text-white"
                     )}>
                         <Icon name="location_on" className="text-lg" />
                     </div>
                     <div className="flex flex-col items-start min-w-0">
                         <span className={cn(
                             "text-xs font-black uppercase tracking-widest leading-none",
-                            isOpen ? "text-white/60" : "text-slate-400"
+                            isOpen ? "text-white/60" : "text-white/40"
                         )}>
                             Current Centre
                         </span>
                         <span className={cn(
                             "text-sm font-bold truncate w-full",
-                            isOpen ? "text-white" : "text-slate-900 dark:text-white"
+                            "text-white"
                         )}>
                             {currentCentre.name}
                         </span>
@@ -51,7 +51,7 @@ export const CentreSwitcher: React.FC = () => {
                     name="expand_more" 
                     className={cn(
                         "text-lg transition-transform duration-300",
-                        isOpen ? "text-white rotate-180" : "text-slate-400 group-hover:text-primary"
+                        isOpen ? "text-white rotate-180" : "text-white/40 group-hover:text-white"
                     )} 
                 />
             </button>

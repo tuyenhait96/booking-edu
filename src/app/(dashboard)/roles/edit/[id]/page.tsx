@@ -11,11 +11,11 @@ import { PERMISSIONS } from '@/utils/permissions';
 function mapPermissions(permissionStrings: string[]) {
     // Default modules from RoleForm
     const DEFAULT_MODULES = [
-        'Users',
         'Organizations',
         'Roles',
-        'Schedule',
-        'Settings'
+        'Dashboard',
+        'Centers',
+        'Classes',
     ];
 
     // Create initial permissions with all false
@@ -39,10 +39,10 @@ function mapPermissions(permissionStrings: string[]) {
 
     // Simplified mapping: return the keys directly
     return permissionStrings.map(perm => {
-        if (perm === 'Users') return 'user.view';
-        if (perm === 'Full User MGMT') return 'user.manage'; // Assuming this exists or map to multiple
-        if (perm === 'Organizations') return 'organization.view';
-        if (perm === 'Tenants') return 'organization.view';
+        // If it's already a permission key (starts with a known prefix or is a constant)
+        if (perm.includes('.')) return perm;
+
+        if (perm === 'Full User MGMT') return 'user.manage';
         return perm;
     });
 }
@@ -54,16 +54,16 @@ const ROLES_DATA = [
         name: 'Super Admin',
         description: 'Master access to all system modules, configurations, and logs.',
         activeUsers: 2,
-        permissions: ['Users', 'Full User MGMT', 'Organizations', '+12 more'],
+        permissions: [PERMISSIONS.ORGANIZATION_VIEW, PERMISSIONS.ORGANIZATION_CREATE, PERMISSIONS.ORGANIZATION_UPDATE, PERMISSIONS.ORGANIZATION_DELETE, PERMISSIONS.ORGANIZATION_SEARCH, PERMISSIONS.ROLE_VIEW, PERMISSIONS.ROLE_CREATE, PERMISSIONS.ROLE_UPDATE, PERMISSIONS.ROLE_DELETE, PERMISSIONS.ROLE_SEARCH],
         icon: 'security',
         color: 'red',
     },
     {
         id: '2',
-        name: 'School Admin',
-        description: 'Manage individual school operations, staff, and student enrollments.',
+        name: 'Org Admin',
+        description: 'Manage individual organization operations, centers, and student enrollments.',
         activeUsers: 12,
-        permissions: ['Users', 'Organizations'],
+        permissions: [PERMISSIONS.DASHBOARD_VIEW, PERMISSIONS.CENTER_VIEW, PERMISSIONS.CENTER_CREATE, PERMISSIONS.CENTER_UPDATE, PERMISSIONS.CENTER_DELETE, PERMISSIONS.CENTER_SEARCH, PERMISSIONS.CLASSES_VIEW],
         icon: 'corporate_fare',
         color: 'blue',
     },

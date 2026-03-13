@@ -13,7 +13,7 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
         // EduCMS brand
-        primary: "#676fcb",
+        primary: "#276faa",
         "background-light": "#f6f6f8",
         "background-dark": "#14151e",
       },

@@ -12,6 +12,8 @@ import {
     HiArrowTrendingDown
 } from "react-icons/hi2";
 
+import { DashboardSummary } from '@/types/dashboard';
+
 interface MetricProps {
     label: string;
     value: string | number;
@@ -44,33 +46,34 @@ const Metric: React.FC<MetricProps> = ({ label, value, trend, icon, color }) => 
     </div>
 );
 
-export const StrategicOverview: React.FC = () => {
+interface StrategicOverviewProps {
+    summary?: DashboardSummary;
+}
+
+export const StrategicOverview: React.FC<StrategicOverviewProps> = ({ summary }) => {
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             <Metric 
-                label="Active Bookings (Weekly)"
-                value="1,248"
-                trend={{ value: "+12.5%", isPositive: true }}
+                label="Today's Bookings"
+                value={summary?.todayBookings ?? 0}
                 icon={<HiOutlineCalendarDays />}
                 color="bg-primary"
             />
             <Metric 
-                label="Global Attendance"
-                value="94.2%"
-                trend={{ value: "+2.1%", isPositive: true }}
+                label="Pending Bookings"
+                value={summary?.pendingBookings ?? 0}
                 icon={<HiOutlineClipboardDocumentCheck />}
                 color="bg-emerald-500"
             />
             <Metric 
-                label="Unresolved Conflicts"
-                value="0"
+                label="Reports Pending Approval"
+                value={summary?.reportsPendingApproval ?? 0}
                 icon={<HiOutlineShieldCheck />}
                 color="bg-amber-500"
             />
             <Metric 
-                label="Revenue (Current Term)"
-                value="$42,850"
-                trend={{ value: "+8.4%", isPositive: true }}
+                label="Open Feedbacks"
+                value={summary?.openFeedbacks ?? 0}
                 icon={<HiOutlineBanknotes />}
                 color="bg-violet-600"
             />

@@ -12,8 +12,8 @@ type NavItemProps = {
 
 export const NavItem: React.FC<NavItemProps> = ({ href, icon, label, isActive = false }) => {
     const activeClass = isActive
-        ? 'bg-primary/10 text-primary font-medium'
-        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors';
+        ? 'bg-[#484848] text-[#f1f5f9] font-semibold'
+        : 'text-white/70 hover:bg-white/10 transition-colors';
 
     return (
         <Link

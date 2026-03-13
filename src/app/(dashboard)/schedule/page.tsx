@@ -1,13 +1,11 @@
 "use client";
 
 import React, { useState } from 'react';
-import { cn } from "@/utils/cn";
 import { Icon } from "@/components/atoms/Icon";
 import Button from "@/components/atoms/Button";
 import { FilterTabs } from "@/components/molecules/FilterTabs/FilterTabs";
 import { DateNavigator } from "@/components/molecules/DateNavigator/DateNavigator";
 import { ScheduleGrid } from "@/components/organisms/ScheduleGrid/ScheduleGrid";
-import { ObjectiveCard } from "@/components/molecules/ObjectiveCard/ObjectiveCard";
 import { AddSessionModal } from "@/components/organisms/AddSessionModal/AddSessionModal";
 import PermissionGuard from '@/components/auth/PermissionGuard';
 import { PERMISSIONS } from '@/utils/permissions';
@@ -98,6 +96,11 @@ export default function SchedulePage() {
                 {/* Filter / Navigation Bar */}
                 <div className="flex flex-col sm:flex-row justify-between bg-white dark:bg-slate-900 rounded-xl p-2 border border-slate-200 dark:border-slate-800 items-center gap-4">
                     <FilterTabs
+                        tabs={[
+                            { label: 'Weekly', value: 'Weekly' },
+                            { label: 'Daily', value: 'Daily' },
+                            { label: 'Monthly', value: 'Monthly' }
+                        ]}
                         activeTab={activeTab}
                         onTabChange={setActiveTab}
                     />

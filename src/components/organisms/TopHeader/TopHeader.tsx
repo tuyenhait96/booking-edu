@@ -6,7 +6,7 @@ export const TopHeader: React.FC = () => {
     return (
         <header className={cn(
             "h-16",
-            "bg-white/80 dark:bg-background-dark/80 backdrop-blur-md px-8",
+            "backdrop-blur-md px-8",
             "flex items-center justify-between sticky top-0 z-10 shrink-0"
         )}>
             <div className="flex-1 max-w-xl" />

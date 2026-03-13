@@ -1,8 +1,10 @@
 // ── Shared API Response Wrapper ─────────────────────────────────────────────
 export interface ApiResponse<T> {
     data: T;
-    message: string;
-    success: boolean;
+    message?: string;
+    success?: boolean;
+    status?: number;
+    error?: string | null;
 }
 
 export interface PaginatedResponse<T> {
@@ -84,9 +86,9 @@ export interface Center {
     organizationId: string;
     name: string;
     code: string;
-    phone: string;
-    email: string;
-    address: string;
+    phone?: string;
+    email?: string;
+    address?: string;
     isActive: boolean;
     createdBy: string;
     createdAt: string;
@@ -113,7 +115,4 @@ export interface Class {
     createdAt: string;
     updatedBy: string | null;
     updatedAt: string;
-    startDate?: string; // For compatibility
-    status?: 'ongoing' | 'completed' | 'upcoming';
-    studentCount?: number;
 }

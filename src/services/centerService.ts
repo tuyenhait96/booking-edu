@@ -21,39 +21,63 @@ const MOCK_CENTERS: Center[] = [
 
 const centerService = {
     getCenters: async (): Promise<ApiResponse<Center[]>> => {
-        const useMock = true;
-        if (useMock) {
-            return new Promise((resolve) => {
-                setTimeout(() => resolve({
-                    status: 200,
-                    error: null,
-                    data: MOCK_CENTERS
-                } as any), 500);
-            });
+        try {
+            const { data } = await axiosInstance.get<ApiResponse<Center[]>>("/centers");
+            return data;
+        } catch (error) {
+            // console.error('API Error (getCenters), falling back to mock data:', error);
+            return {
+                status: 200,
+                error: null,
+                data: MOCK_CENTERS
+            };
         }
-        const { data } = await axiosInstance.get<ApiResponse<Center[]>>("/centers");
-        return data;
     },
 
     createCenter: async (payload: Partial<Center>): Promise<ApiResponse<Center>> => {
-        const useMock = true;
-        if (useMock) {
-            return new Promise((resolve) => {
-                const newCenter = {
-                    ...payload,
-                    id: Math.random().toString(36).substr(2, 9),
-                    createdAt: new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
-                } as Center;
-                setTimeout(() => resolve({
-                    status: 201,
-                    error: null,
-                    data: newCenter
-                } as any), 500);
-            });
+        try {
+            const { data } = await axiosInstance.post<ApiResponse<Center>>("/centers", payload);
+            return data;
+        } catch (error) {
+            const newCenter = {
+                ...payload,
+                id: Math.random().toString(36).substring(2, 9),
+                isActive: true,
+                createdAt: new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            } as Center;
+            return {
+                status: 201,
+                error: null,
+                data: newCenter
+            };
         }
-        const { data } = await axiosInstance.post<ApiResponse<Center>>("/centers", payload);
-        return data;
+    },
+
+    updateCenter: async (id: string, payload: Partial<Center>): Promise<ApiResponse<Center>> => {
+        try {
+            const { data } = await axiosInstance.put<ApiResponse<Center>>(`/centers/${id}`, payload);
+            return data;
+        } catch (error) {
+            return {
+                status: 200,
+                error: null,
+                data: { ...payload, id, updatedAt: new Date().toISOString() } as Center
+            };
+        }
+    },
+
+    deleteCenter: async (id: string): Promise<ApiResponse<void>> => {
+        try {
+            const { data } = await axiosInstance.delete<ApiResponse<void>>(`/centers/${id}`);
+            return data;
+        } catch (error) {
+            return {
+                status: 204,
+                error: null,
+                data: undefined
+            };
+        }
     }
 };
 

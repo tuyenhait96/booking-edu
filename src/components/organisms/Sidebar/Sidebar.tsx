@@ -10,15 +10,31 @@ import { PERMISSIONS } from '@/utils/permissions';
 import PermissionGuard from '@/components/auth/PermissionGuard';
 import { CentreSwitcher } from '@/components/molecules/CentreSwitcher/CentreSwitcher';
 
-const NAV_ITEMS = [
+interface NavItemConfig {
+    href?: string;
+    icon?: string;
+    label: string;
+    permission: string;
+    items?: {
+        href: string;
+        icon: string;
+        label: string;
+        permission: string;
+    }[];
+    hideLabel?: boolean;
+}
+
+const NAV_ITEMS: NavItemConfig[] = [
     { href: '/dashboard', icon: 'dashboard', label: 'Dashboard', permission: PERMISSIONS.DASHBOARD_VIEW },
     { href: '/center-dashboard', icon: 'analytics', label: 'Center Overview', permission: PERMISSIONS.CENTER_MANAGE },
     { href: '/users', icon: 'group', label: 'Users', permission: PERMISSIONS.USER_VIEW },
-    { href: '/organizations', icon: 'corporate_fare', label: 'Organizations', permission: PERMISSIONS.ORGANIZATION_MANAGE },
+    { href: '/organizations', icon: 'corporate_fare', label: 'Organizations', permission: PERMISSIONS.ORGANIZATION_VIEW },
     { href: '/centers', icon: 'storefront', label: 'Centers', permission: PERMISSIONS.CENTER_MANAGE },
-    { href: '/classes', icon: 'school', label: 'Classes', permission: PERMISSIONS.CURRICULUM_VIEW },
-    { 
-        label: 'Operations', 
+    { href: '/classes', icon: 'school', label: 'Classes', permission: PERMISSIONS.CLASSES_VIEW },
+    {
+        label: 'Operations',
+        hideLabel: true,
+        permission: PERMISSIONS.CALENDAR_VIEW,
         items: [
             { href: '/schedule', icon: 'calendar_month', label: 'Schedule', permission: PERMISSIONS.CALENDAR_VIEW },
             { href: '/booking-rules', icon: 'rule', label: 'Booking Rules', permission: PERMISSIONS.BOOKING_RULES_MANAGE },
@@ -29,6 +45,8 @@ const NAV_ITEMS = [
     },
     {
         label: 'Global Content',
+        hideLabel: true,
+        permission: PERMISSIONS.FAQ_VIEW,
         items: [
             { href: '/faq', icon: 'quiz', label: 'FAQ System', permission: PERMISSIONS.FAQ_VIEW },
             { href: '/announcements', icon: 'campaign', label: 'Announcements', permission: PERMISSIONS.ANNOUNCEMENT_MANAGE },
@@ -36,6 +54,8 @@ const NAV_ITEMS = [
     },
     {
         label: 'Evaluations',
+        hideLabel: true,
+        permission: PERMISSIONS.REPORT_VIEW,
         items: [
             { href: '/reports', icon: 'assessment', label: 'Reports', permission: PERMISSIONS.REPORT_VIEW },
             { href: '/approvals', icon: 'fact_check', label: 'Approvals', permission: PERMISSIONS.REPORT_APPROVE },
@@ -43,6 +63,8 @@ const NAV_ITEMS = [
     },
     {
         label: 'Tools & Settings',
+        hideLabel: true,
+        permission: PERMISSIONS.ROLE_VIEW,
         items: [
             { href: '/roles', icon: 'admin_panel_settings', label: 'Roles', permission: PERMISSIONS.ROLE_VIEW },
             { href: '/centre-config', icon: 'hub', label: 'Location Config', permission: PERMISSIONS.SYSTEM_SETTINGS_MANAGE },
@@ -64,31 +86,47 @@ export const Sidebar: React.FC = () => {
         router.push("/login");
     };
 
-    const filteredNavItems = user?.role === 'SUP_ADMIN' 
-        ? NAV_ITEMS.filter(item => 
-            item.label === 'Organizations' || 
-            item.href === '/organizations' ||
-            item.label === 'Tools & Settings'
-        ).map(section => {
-            if (section.label === 'Tools & Settings') {
-                return {
-                    ...section,
-                    items: section.items?.filter(item => item.label === 'Roles')
-                };
-            }
-            return section;
-        })
-        : NAV_ITEMS;
+    const getFilteredNavItems = () => {
+        if (user?.role === 'SUP_ADMIN') {
+            return NAV_ITEMS.filter(item =>
+                item.label === 'Dashboard' ||
+                item.label === 'Organizations' ||
+                item.label === 'Centers' ||
+                item.label === 'Classes' ||
+                item.label === 'Tools & Settings'
+            ).map(section => {
+                if (section.label === 'Tools & Settings') {
+                    return {
+                        ...section,
+                        items: section.items?.filter(item => item.label === 'Roles')
+                    };
+                }
+                return section;
+            });
+        }
+
+        if (user?.role === 'ORG_ADMIN') {
+            return NAV_ITEMS.filter(item =>
+                item.label === 'Dashboard' ||
+                item.label === 'Centers' ||
+                item.label === 'Classes'
+            );
+        }
+
+        return NAV_ITEMS;
+    };
+
+    const filteredNavItems = getFilteredNavItems();
 
     return (
-        <aside className="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark flex flex-col shrink-0">
+        <aside className="w-64 border-r border-white/10 bg-primary text-[#f1f5f9] flex flex-col shrink-0">
             <div className="p-6 flex items-center gap-3">
-                <div className="size-10 bg-primary rounded-lg flex items-center justify-center text-white shrink-0">
+                <div className="size-10 bg-white/10 rounded-lg flex items-center justify-center text-white shrink-0">
                     <Icon name="school" />
                 </div>
                 <div className="flex flex-col">
                     <h1 className="text-base font-bold leading-none">EduCMS</h1>
-                    <p className="text-xs text-slate-500 mt-1 uppercase tracking-wider">
+                    <p className="text-xs text-white/60 mt-1 uppercase tracking-wider">
                         {user?.role?.replace('_', ' ') || 'Super Admin'}
                     </p>
                 </div>
@@ -98,7 +136,7 @@ export const Sidebar: React.FC = () => {
                 <CentreSwitcher />
             </PermissionGuard>
 
-            <nav className="flex-1 px-4 space-y-6 overflow-y-auto custom-scrollbar pt-2 pb-6">
+            <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar pt-2 pb-6">
                 {filteredNavItems.map((section) => (
                     <div key={section.label} className="space-y-1">
                         {section.href ? (
@@ -110,9 +148,11 @@ export const Sidebar: React.FC = () => {
                             </PermissionGuard>
                         ) : (
                             <>
-                                <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400 mb-2">
-                                    {section.label}
-                                </p>
+                                {section.label && !section.hideLabel && (
+                                    <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-2">
+                                        {section.label}
+                                    </p>
+                                )}
                                 <div className="space-y-1">
                                     {section.items?.map((item) => (
                                         <PermissionGuard key={item.label} requiredPermission={item.permission}>
@@ -129,7 +169,7 @@ export const Sidebar: React.FC = () => {
                 ))}
             </nav>
 
-            <div className="p-4 border-t border-slate-200 dark:border-slate-800 shrink-0">
+            <div className="p-4 border-t border-white/10 shrink-0">
                 <UserProfileSnippet
                     name={user?.name || user?.email.split('@')[0] || 'User'}
                     role={user?.role?.replace('_', ' ') || 'Member'}

@@ -12,7 +12,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) =>
             <Sidebar />
             <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-background-light dark:bg-background-dark">
                 <TopHeader />
-                <div className="flex-1 overflow-y-auto p-8 space-y-8">
+                <div className="flex-1 overflow-y-auto pt-0 p-8 space-y-8">
                     {children}
                 </div>
             </main>
