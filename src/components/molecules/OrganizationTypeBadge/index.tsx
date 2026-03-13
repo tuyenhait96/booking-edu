@@ -1,14 +1,14 @@
 import React from 'react';
 import Badge from '@/components/atoms/Badge';
 
-type TenantType = 'Higher Ed' | 'K-12' | string;
+type OrganizationType = 'Higher Ed' | 'K-12' | string;
 
-interface TenantTypeBadgeProps {
-    type: TenantType;
+interface OrganizationTypeBadgeProps {
+    type: OrganizationType;
     className?: string;
 }
 
-export const TenantTypeBadge: React.FC<TenantTypeBadgeProps> = ({ type, className }) => {
+export const OrganizationTypeBadge: React.FC<OrganizationTypeBadgeProps> = ({ type, className }) => {
     let variant: 'info' | 'orange' | 'default' = 'default';
 
     if (type === 'Higher Ed') variant = 'info';

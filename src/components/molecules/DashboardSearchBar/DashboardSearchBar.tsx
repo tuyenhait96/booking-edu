@@ -9,7 +9,7 @@ type DashboardSearchBarProps = {
 };
 
 export const DashboardSearchBar: React.FC<DashboardSearchBarProps> = ({
-    placeholder = "Search tenants, or users...",
+    placeholder = "Search organizations, or users...",
     className
 }) => {
     return (

@@ -2,7 +2,7 @@
 
 import { StatsGrid } from "@/components/organisms/StatsGrid";
 import { RegistrationsChart } from "@/components/organisms/RegistrationsChart";
-import { TenantsTable } from "@/components/organisms/TenantsTable";
+import { OrganizationsTable } from "@/components/organisms/OrganizationsTable";
 import { StrategicOverview } from "@/components/organisms/StrategicOverview";
 import { useAuthStore } from "@/store/useAuthStore";
 import { Icon } from "@/components/atoms/Icon";
@@ -50,7 +50,7 @@ export default function DashboardPage() {
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                 <RegistrationsChart />
-                <TenantsTable />
+                <OrganizationsTable />
             </div>
         </>
     );

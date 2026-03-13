@@ -45,7 +45,11 @@ export default function EduCMSLoginPage() {
                 const expires = new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString();
                 document.cookie = `session_token=${accessToken}; path=/; expires=${expires}; SameSite=Strict; Secure`;
                 
-                router.push("/dashboard");
+                if (user.role === 'SUP_ADMIN') {
+                    router.push("/organizations");
+                } else {
+                    router.push("/dashboard");
+                }
             } else {
                 setError(response.error || "Login failed");
             }

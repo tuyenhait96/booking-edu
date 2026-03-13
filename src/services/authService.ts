@@ -33,74 +33,89 @@ export interface LoginResponse {
     data: LoginSuccess;
 }
 
-const MOCK_LOGIN_DATA: LoginResponse = {
-    "status": 201,
-    "error": null,
-    "data": {
-        "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkMzU0NmViZC05NTQ4LTQxYjItYjlkZC00ZWJhZGI4ZDViNzQiLCJlbWFpbCI6ImRlbW9AZXhhbXBsZS5jb20iLCJyb2xlIjoiUExBVEZPUk1fQURNSU4iLCJpYXQiOjE3NzMyMTgzNjksImV4cCI6MTc3MzMwNDc2OX0.t-k41vpfSG7Ai6fq9KhJa0AVwf-TVADiX3hRYJMMacQ",
-        "user": {
-            "id": "d3546ebd-9548-41b2-b9dd-4ebadb8d5b74",
-            "email": "demo@example.com",
-            "role": "PLATFORM_ADMIN",
-            "permissions": [
-                "auth.login",
-                "center.switch",
-                "curriculum.view",
-                "attendance.absence.monitor",
-                "user.search",
-                "announcement.manage",
-                "user.create",
-                "booking.restrict.manage",
-                "faq.view",
-                "report.approve",
-                "classroom.manage",
-                "user.delete",
-                "profile.view",
-                "system.maintenance.manage",
-                "faq.manage",
-                "notification.send",
-                "profile.update",
-                "benefit.manage",
-                "user.update",
-                "booking.cancel",
-                "parent.children.manage",
-                "booking.create",
-                "calendar.manage",
-                "booking.conflict.resolve",
-                "integration.export.manage",
-                "benefit.view",
-                "system.settings.manage",
-                "class.split.manage",
-                "booking.update",
-                "subject_head.assign",
-                "report.draft",
-                "announcement.view",
-                "curriculum.manage",
-                "system.backup.manage",
-                "calendar.view",
-                "dashboard.view",
-                "booking.rules.manage",
-                "auth.password.reset",
-                "student.promotion.manage",
-                "class.assignment.manage",
-                "booking.view",
-                "report.view",
-                "report.publish",
-                "notification.view",
-                "user.view"
+const MOCK_ACCOUNTS: Record<string, LoginSuccess> = {
+    "superadmin@edu.com": {
+        accessToken: "mock-token-superadmin",
+        user: {
+            id: "sa-1",
+            email: "superadmin@edu.com",
+            role: "SUP_ADMIN",
+            permissions: [
+                "organization.manage",
+                "organization.view",
+                "organization.create",
+                "organization.update",
+                "organization.delete",
+                "organization.search",
+                "role.view",
+                "role.create",
+                "role.update",
+                "role.delete",
+                "role.search",
             ]
+        }
+    },
+    "orgadmin@edu.com": {
+        accessToken: "mock-token-orgadmin",
+        user: {
+            id: "oa-1",
+            email: "orgadmin@edu.com",
+            role: "ORG_ADMIN",
+            permissions: [
+                "organization.view",
+                "center.manage",
+                "curriculum.view",
+                "dashboard.view",
+                "calendar.view",
+                "report.view"
+            ]
+        }
+    },
+    "manager@edu.com": {
+        accessToken: "mock-token-manager",
+        user: {
+            id: "cm-1",
+            email: "manager@edu.com",
+            role: "CENTER_MANAGER",
+            permissions: [
+                "calendar.view",
+                "booking.view",
+                "attendance.absence.monitor"
+            ]
+        }
+    }
+};
+
+const DEFAULT_MOCK_LOGIN: LoginResponse = {
+    status: 201,
+    error: null,
+    data: {
+        accessToken: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJkMzU0NmViZC05NTQ4LTQxYjItYjlkZC00ZWJhZGI4ZDViNzQiLCJlbWFpbCI6ImRlbW9AZXhhbXBsZS5jb20iLCJyb2xlIjoiUExBVEZPUk1fQURNSU4iLCJpYXQiOjE3NzMyMTgzNjksImV4cCI6MTc3MzMwNDc2OX0",
+        user: {
+            id: "d3546ebd-9548-41b2-b9dd-4ebadb8d5b74",
+            email: "demo@example.com",
+            role: "PLATFORM_ADMIN",
+            permissions: ["*"] // All permissions
         }
     }
 };
 
 const authService = {
     login: async (payload: LoginFormValues): Promise<LoginResponse> => {
-        // Toggle this to use mock data
         const useMock = true;
 
         if (useMock) {
             return new Promise((resolve) => {
-                setTimeout(() => resolve(MOCK_LOGIN_DATA), 500);
+                const mockAccount = MOCK_ACCOUNTS[payload.email];
+                if (mockAccount) {
+                    setTimeout(() => resolve({
+                        status: 201,
+                        error: null,
+                        data: mockAccount
+                    }), 500);
+                } else {
+                    setTimeout(() => resolve(DEFAULT_MOCK_LOGIN), 500);
+                }
             });
         }
 

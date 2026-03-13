@@ -27,7 +27,7 @@ export const UsersFilterBar: React.FC = () => {
                     ]}
                 />
                 <Select
-                    placeholder="Tenant: All"
+                    placeholder="Organization: All"
                     options={[
                         { value: 'oakwood', label: 'Oakwood International' },
                         { value: 'pinehurst', label: 'Pinehurst Academy' },

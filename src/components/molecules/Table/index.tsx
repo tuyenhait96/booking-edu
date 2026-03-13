@@ -95,6 +95,7 @@ export interface Column<T> {
 interface DataTableProps<T> {
     data: T[];
     columns: Column<T>[];
+    isLoading?: boolean;
     pagination?: {
         currentPage: number;
         totalPages: number;
@@ -111,6 +112,7 @@ interface DataTableProps<T> {
 export function DataTable<T>({
     data,
     columns,
+    isLoading,
     pagination,
     className,
     containerClassName,
@@ -127,7 +129,16 @@ export function DataTable<T>({
                     ))}
                 </THead>
                 <TBody>
-                    {data.length > 0 ? (
+                    {isLoading ? (
+                        <TR>
+                            <TD colSpan={columns.length} className="text-center py-20">
+                                <div className="flex flex-col items-center justify-center gap-3">
+                                    <div className="size-8 border-4 border-primary/20 border-t-primary rounded-full animate-spin" />
+                                    <p className="text-sm text-slate-500 font-medium">Loading data...</p>
+                                </div>
+                            </TD>
+                        </TR>
+                    ) : data.length > 0 ? (
                         data.map((item, rowIdx) => (
                             <TR 
                                 key={rowIdx} 

@@ -11,7 +11,7 @@ interface UserData {
     email: string;
     avatarUrl: string;
     role: 'Teacher' | 'Parent' | 'Student';
-    tenant: string;
+    organization: string;
     status: 'active' | 'inactive' | 'pending';
     lastLogin: string;
 }
@@ -91,8 +91,8 @@ export default function DeleteUserModal({ isOpen, onClose, onConfirm, user }: De
                                 <span className="ml-2 font-medium capitalize">{user.status}</span>
                             </div>
                             <div>
-                                <span className="text-slate-500">Tenant:</span>
-                                <span className="ml-2 font-medium">{user.tenant}</span>
+                                <span className="text-slate-500">Organization:</span>
+                                <span className="ml-2 font-medium">{user.organization}</span>
                             </div>
                             <div>
                                 <span className="text-slate-500">Last Login:</span>

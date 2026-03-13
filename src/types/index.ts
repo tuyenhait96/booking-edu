@@ -22,6 +22,9 @@ export enum UserRole {
     ADMIN = "admin",
     USER = "user",
     GUEST = "guest",
+    SUP_ADMIN = "super_admin",
+    ORG_ADMIN = "org_admin",
+    CENTER_MANAGER = "center_manager",
 }
 
 export enum Status {
@@ -56,3 +59,61 @@ export type ColorScheme =
     | "yellow"
     | "purple"
     | "gray";
+
+// ── Domain Specific Types ──────────────────────────────────────────────────
+export interface Organization {
+    id: string;
+    name: string;
+    phone: string;
+    email: string;
+    address: string;
+    isActive: boolean;
+    maxCenters: number;
+    createdBy: string;
+    createdAt: string;
+    updatedBy: string | null;
+    updatedAt: string;
+    domain?: string; // Kept for backward compatibility if needed in UI
+    image?: string;
+    type?: string;
+    plan?: string;
+}
+
+export interface Center {
+    id: string;
+    organizationId: string;
+    name: string;
+    code: string;
+    phone: string;
+    email: string;
+    address: string;
+    isActive: boolean;
+    createdBy: string;
+    createdAt: string;
+    updatedBy: string | null;
+    updatedAt: string;
+}
+
+export interface Class {
+    id: string;
+    centerId: string;
+    subjectId: string;
+    levelId: string;
+    classroomId: string;
+    topicId: string;
+    packageId: string | null;
+    academicTermId: string | null;
+    name: string;
+    classType: string;
+    classSize: number;
+    splitThreshold: number;
+    attributes: any | null;
+    isActive: boolean;
+    createdBy: string;
+    createdAt: string;
+    updatedBy: string | null;
+    updatedAt: string;
+    startDate?: string; // For compatibility
+    status?: 'ongoing' | 'completed' | 'upcoming';
+    studentCount?: number;
+}

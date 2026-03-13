@@ -5,13 +5,14 @@ import Link from 'next/link';
 import { Icon } from '@/components/atoms/Icon';
 import { RoleForm } from '@/components/organisms/RoleForm';
 import { useParams } from 'next/navigation';
+import { PERMISSIONS } from '@/utils/permissions';
 
 // Helper function to map simple string permissions to PermissionEntry format
 function mapPermissions(permissionStrings: string[]) {
     // Default modules from RoleForm
     const DEFAULT_MODULES = [
         'Users',
-        'Tenants',
+        'Organizations',
         'Roles',
         'Schedule',
         'Settings'
@@ -32,49 +33,17 @@ function mapPermissions(permissionStrings: string[]) {
     const isSuperAdmin = permissionStrings.some(perm => perm.includes('+') && perm.includes('more'));
 
     if (isSuperAdmin) {
-        // Super Admin gets all permissions for all modules
-        return initialPermissions.map(entry => ({
-            ...entry,
-            permissions: {
-                view: true,
-                create: true,
-                edit: true,
-                delete: true
-            }
-        }));
+        // Super Admin gets all permissions from our constants
+        return Object.values(PERMISSIONS);
     }
 
-    // Map the permission strings to the PermissionEntry format
-    // This is a simple mapping - in a real app, you would have a more sophisticated mapping
-    return initialPermissions.map(entry => {
-        // Check if this module should have permissions based on the permission strings
-        const hasPermission = permissionStrings.some(perm => {
-            // Check for module matches
-            const permLower = perm.toLowerCase();
-            const moduleLower = entry.module.toLowerCase();
-
-            // Direct match or contains match
-            return permLower.includes(moduleLower) || moduleLower.includes(permLower) ||
-                // Special mappings
-                (permLower.includes('user') && moduleLower === 'users') ||
-                (permLower.includes('setting') && moduleLower === 'settings') ||
-                (permLower.includes('student') && moduleLower === 'users')
-        });
-
-        if (hasPermission) {
-            // For simplicity, grant all permissions if the module is mentioned
-            return {
-                ...entry,
-                permissions: {
-                    view: true,
-                    create: true,
-                    edit: true,
-                    delete: true
-                }
-            };
-        }
-
-        return entry;
+    // Simplified mapping: return the keys directly
+    return permissionStrings.map(perm => {
+        if (perm === 'Users') return 'user.view';
+        if (perm === 'Full User MGMT') return 'user.manage'; // Assuming this exists or map to multiple
+        if (perm === 'Organizations') return 'organization.view';
+        if (perm === 'Tenants') return 'organization.view';
+        return perm;
     });
 }
 
@@ -85,7 +54,7 @@ const ROLES_DATA = [
         name: 'Super Admin',
         description: 'Master access to all system modules, configurations, and logs.',
         activeUsers: 2,
-        permissions: ['Users', 'Full User MGMT', '+12 more'],
+        permissions: ['Users', 'Full User MGMT', 'Organizations', '+12 more'],
         icon: 'security',
         color: 'red',
     },
@@ -94,7 +63,7 @@ const ROLES_DATA = [
         name: 'School Admin',
         description: 'Manage individual school operations, staff, and student enrollments.',
         activeUsers: 12,
-        permissions: ['Users', 'Tenants'],
+        permissions: ['Users', 'Organizations'],
         icon: 'corporate_fare',
         color: 'blue',
     },

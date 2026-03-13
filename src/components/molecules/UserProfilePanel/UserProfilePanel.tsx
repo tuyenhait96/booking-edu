@@ -16,7 +16,7 @@ interface UserProfilePanelProps {
         email: string;
         avatarUrl: string;
         role: string;
-        tenant: string;
+        organization: string;
         status: string;
         lastLogin: string;
         absences?: number;
@@ -143,7 +143,7 @@ export const UserProfilePanel: React.FC<UserProfilePanelProps> = ({ isOpen, onCl
                                     </div>
                                     <div>
                                         <p className="text-xs text-slate-400 font-bold uppercase tracking-tight">Main Centre</p>
-                                        <p className="text-sm font-bold text-slate-900 dark:text-white">{user.tenant}</p>
+                                        <p className="text-sm font-bold text-slate-900 dark:text-white">{user.organization}</p>
                                     </div>
                                 </div>
                                 <div className="flex items-center gap-3">

@@ -24,7 +24,7 @@ const ROLES_DATA: RoleData[] = [
         name: 'Super Admin',
         description: 'Master access to all system modules, configurations, and logs.',
         activeUsers: 2,
-        permissions: [PERMISSIONS.USER_VIEW, PERMISSIONS.SYSTEM_SETTINGS_MANAGE, 'all'],
+        permissions: [PERMISSIONS.ORGANIZATION_MANAGE, 'Full Access'],
         icon: 'security',
         color: 'red',
     },
@@ -36,24 +36,6 @@ const ROLES_DATA: RoleData[] = [
         permissions: [PERMISSIONS.CURRICULUM_MANAGE, PERMISSIONS.BOOKING_VIEW],
         icon: 'corporate_fare',
         color: 'blue',
-    },
-    {
-        id: '3',
-        name: 'Teacher',
-        description: 'Access to classrooms, grading, attendance, and student progress reports.',
-        activeUsers: 150,
-        permissions: [PERMISSIONS.CURRICULUM_VIEW, PERMISSIONS.ATTENDANCE_ABSENCE_MONITOR],
-        icon: 'person_pin',
-        color: 'emerald',
-    },
-    {
-        id: '4',
-        name: 'Parent',
-        description: "View child's academic performance, schedule, and school announcements.",
-        activeUsers: 800,
-        permissions: [PERMISSIONS.CALENDAR_VIEW, PERMISSIONS.NOTIFICATION_VIEW],
-        icon: 'family_restroom',
-        color: 'amber',
     },
 ];
 
@@ -125,7 +107,7 @@ export const RolesTable: React.FC = () => {
             className: "text-right",
             render: (item) => (
                 <div className="flex justify-end gap-1">
-                    <PermissionGuard requiredPermission={PERMISSIONS.SYSTEM_SETTINGS_MANAGE}>
+                    <PermissionGuard requiredPermission={PERMISSIONS.ROLE_UPDATE}>
                         <button
                             className="p-2 text-slate-400 hover:text-primary transition-colors"
                             onClick={() => handleEditClick(item)}
@@ -134,8 +116,8 @@ export const RolesTable: React.FC = () => {
                             <Icon name="edit" />
                         </button>
                     </PermissionGuard>
-                    
-                    <PermissionGuard requiredPermission={PERMISSIONS.SYSTEM_SETTINGS_MANAGE}>
+
+                    <PermissionGuard requiredPermission={PERMISSIONS.ROLE_DELETE}>
                         <button
                             className="p-2 text-slate-400 hover:text-red-500 transition-colors"
                             onClick={() => handleDeleteClick(item)}
@@ -150,7 +132,7 @@ export const RolesTable: React.FC = () => {
     ];
 
     return (
-        <>
+        <PermissionGuard requiredPermission={PERMISSIONS.ROLE_VIEW} showMessage={true}>
             <DataTable
                 data={roles}
                 columns={columns}
@@ -162,6 +144,6 @@ export const RolesTable: React.FC = () => {
                 role={selectedRole}
                 onDelete={handleDeleteRole}
             />
-        </>
+        </PermissionGuard>
     );
 };

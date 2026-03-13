@@ -2,14 +2,14 @@ import React from 'react';
 import { StatusDot } from '@/components/atoms/StatusDot/StatusDot';
 import { cn } from '@/utils/cn';
 
-type TenantStatus = 'active' | 'inactive' | 'pending';
+type OrganizationStatus = 'active' | 'inactive' | 'pending';
 
-interface TenantStatusBadgeProps {
-    status: TenantStatus;
+interface OrganizationStatusBadgeProps {
+    status: OrganizationStatus;
     className?: string;
 }
 
-export const TenantStatusBadge: React.FC<TenantStatusBadgeProps> = ({ status, className }) => {
+export const OrganizationStatusBadge: React.FC<OrganizationStatusBadgeProps> = ({ status, className }) => {
     const statusConfig = {
         active: {
             text: 'Active',

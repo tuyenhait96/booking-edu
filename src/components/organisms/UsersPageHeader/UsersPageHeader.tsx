@@ -16,7 +16,7 @@ export const UsersPageHeader: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div className="flex flex-col gap-1">
                 <h1 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">Users Directory</h1>
-                <p className="text-slate-500 dark:text-slate-400">Manage and monitor teacher and parents accounts across tenants.</p>
+                <p className="text-slate-500 dark:text-slate-400">Manage and monitor teacher and parents accounts across organizations.</p>
             </div>
             
             <div className="flex items-center gap-3">

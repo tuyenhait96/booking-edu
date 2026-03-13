@@ -13,7 +13,7 @@ interface UserData {
     email: string;
     avatarUrl: string;
     role: "Teacher" | "Parent" | "Student";
-    tenant: string;
+    organization: string;
     status: "active" | "inactive" | "pending";
     lastLogin: string;
     // Additional fields for form

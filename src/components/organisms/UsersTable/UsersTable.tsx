@@ -16,7 +16,7 @@ interface UserData {
     email: string;
     avatarUrl: string;
     role: 'Teacher' | 'Parent' | 'Student';
-    tenant: string;
+    organization: string;
     status: 'active' | 'inactive' | 'pending';
     lastLogin: string;
     absences?: number;
@@ -30,7 +30,7 @@ const USERS_DATA: UserData[] = [
         email: 'sarah.j@oakwood.edu',
         avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBEbTPG08Xa5PqUWUf1ufjrJhx-kRXheHgstllORYesaE98aWGc4nveSDvUaUeDVAZBmuGG22kFkPgkkYL3Qw6bfq1oe8GOlaXNF--NU2nqs2pNBaxMbVJpglHp5kyjjiceD9GrukhopqC0_vuDZUD-rprVzooVGq4Xu5bM1X70CZtFAUP-YxFfTuitu6Dmq-0uarRMG7usB9diH4-On9bk21nuI2SEpqScFmJdn3a5h8GN546-yP6wdJdBpBJe6N60YQvx3n2-tCNc',
         role: 'Teacher',
-        tenant: 'Oakwood International',
+        organization: 'Oakwood International',
         status: 'active',
         lastLogin: '2 hours ago',
     },
@@ -40,7 +40,7 @@ const USERS_DATA: UserData[] = [
         email: 'r.miller@gmail.com',
         avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuA_OWRRdCvsiWlj4GaugF5DB3o2QLUCHyWI-d-dQQ0hh0Bpljk7Py6WQl3hrmqqYJTXaEDlfTfmO-Keg1fCv3_eAAjk6RNWV8apHDFh_60ZcZkq-MZQg53ImHJsC_TBev4dDVHFLZJa80_YE7Kz6Ha82bT09iCp0RoGMiFSMIZ3AwZ3Bil1EicAQvCP3BptycTBD2vvlRzuzAW0F-Vf-4vCgAzvE76OP1Y883XT9STxnG60sMB91Sf8OjNF7AjZgPPjx4d2eDUbOBoy',
         role: 'Parent',
-        tenant: 'Pinehurst Academy',
+        organization: 'Pinehurst Academy',
         status: 'active',
         lastLogin: 'Yesterday, 4:15 PM',
         absences: 0,
@@ -55,7 +55,7 @@ const USERS_DATA: UserData[] = [
         email: 'e.rodriguez@stmarys.org',
         avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuDTG4V98w_ysl34c6wYKDnLfDF1P75xz3FgS3Ii-d0y4_JsdYttkyoRI8bcu7_nWJ7fmJ294_g2TXShHzvxt9nW4fAxTr8qVtPCQ9TpRYF8kT4juDQS7ttCww24TqkywtYPeg-wfbAkOjtHwLpqjlgzbs6fOHQk1mpH0Q2QduKBJHYuTRZ0fDBY1iLlBDSscEy1OLsgWSe_8CFKDNWp9XKPP_25TgcxbiaHK8PBWYQa4IlxTZyZMPWhVwNe-zvsQoO18i1Zt7iBB5hq',
         role: 'Teacher',
-        tenant: "St. Mary's Secondary",
+        organization: "St. Mary's Secondary",
         status: 'inactive',
         lastLogin: 'Oct 12, 2023',
     },
@@ -65,7 +65,7 @@ const USERS_DATA: UserData[] = [
         email: 'mchen@outlook.com',
         avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBKHx11HZEoMuJduwZ2hkXqZRlwDmZJpe8cZtd9_TqUrm1RBcvjx6OHvV0yMb7Uu9S0o5KPa-oy7_2lx7EX7P6g4QHXD2QJ0Qw2o-p-f3Z89Eysf1_aOQ8c_O2_LRYx5AV2-8fMBmz0ZQOBe4WnPF97m52bte3jn74yZaNaAZwYmYAypJjI9MHSSw89CWKbKXbACsKCI3JUGViZL33_o8QASluefzHQ0zh5GoTkCV_igdystRtwuqqw-lkRlC7kkj91XoOFXw6UWg3j',
         role: 'Parent',
-        tenant: 'Oakwood International',
+        organization: 'Oakwood International',
         status: 'pending',
         lastLogin: 'Never',
     },
@@ -75,7 +75,7 @@ const USERS_DATA: UserData[] = [
         email: 'j.wilson@oakwood.edu',
         avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBKHx11HZEoMuJduwZ2hkXqZRlwDmZJpe8cZtd9_TqUrm1RBcvjx6OHvV0yMb7Uu9S0o5KPa-oy7_2lx7EX7P6g4QHXD2QJ0Qw2o-p-f3Z89Eysf1_aOQ8c_O2_LRYx5AV2-8fMBmz0ZQOBe4WnPF97m52bte3jn74yZaNaAZwYmYAypJjI9MHSSw89CWKbKXbACsKCI3JUGViZL33_o8QASluefzHQ0zh5GoTkCV_igdystRtwuqqw-lkRlC7kkj91XoOFXw6UWg3j',
         role: 'Student',
-        tenant: 'Oakwood International',
+        organization: 'Oakwood International',
         status: 'active',
         lastLogin: '1 hour ago',
         absences: 4,
@@ -86,7 +86,7 @@ const USERS_DATA: UserData[] = [
         email: 'e.davis@oakwood.edu',
         avatarUrl: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBKHx11HZEoMuJduwZ2hkXqZRlwDmZJpe8cZtd9_TqUrm1RBcvjx6OHvV0yMb7Uu9S0o5KPa-oy7_2lx7EX7P6g4QHXD2QJ0Qw2o-p-f3Z89Eysf1_aOQ8c_O2_LRYx5AV2-8fMBmz0ZQOBe4WnPF97m52bte3jn74yZaNaAZwYmYAypJjI9MHSSw89CWKbKXbACsKCI3JUGViZL33_o8QASluefzHQ0zh5GoTkCV_igdystRtwuqqw-lkRlC7kkj91XoOFXw6UWg3j',
         role: 'Student',
-        tenant: 'Oakwood International',
+        organization: 'Oakwood International',
         status: 'active',
         lastLogin: '30 mins ago',
         absences: 7,
@@ -158,9 +158,9 @@ export const UsersTable: React.FC = () => {
             ),
         },
         {
-            header: 'Tenant',
+            header: 'Organization',
             className: "text-sm",
-            render: (item) => item.tenant,
+            render: (item) => item.organization,
         },
         {
             header: 'Status',

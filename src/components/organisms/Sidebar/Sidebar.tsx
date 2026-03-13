@@ -12,7 +12,11 @@ import { CentreSwitcher } from '@/components/molecules/CentreSwitcher/CentreSwit
 
 const NAV_ITEMS = [
     { href: '/dashboard', icon: 'dashboard', label: 'Dashboard', permission: PERMISSIONS.DASHBOARD_VIEW },
+    { href: '/center-dashboard', icon: 'analytics', label: 'Center Overview', permission: PERMISSIONS.CENTER_MANAGE },
     { href: '/users', icon: 'group', label: 'Users', permission: PERMISSIONS.USER_VIEW },
+    { href: '/organizations', icon: 'corporate_fare', label: 'Organizations', permission: PERMISSIONS.ORGANIZATION_MANAGE },
+    { href: '/centers', icon: 'storefront', label: 'Centers', permission: PERMISSIONS.CENTER_MANAGE },
+    { href: '/classes', icon: 'school', label: 'Classes', permission: PERMISSIONS.CURRICULUM_VIEW },
     { 
         label: 'Operations', 
         items: [
@@ -40,8 +44,8 @@ const NAV_ITEMS = [
     {
         label: 'Tools & Settings',
         items: [
-            { href: '/roles', icon: 'admin_panel_settings', label: 'Roles', permission: PERMISSIONS.USER_SEARCH },
-            { href: '/centre-config', icon: 'hub', label: 'Centre Config', permission: PERMISSIONS.SYSTEM_SETTINGS_MANAGE },
+            { href: '/roles', icon: 'admin_panel_settings', label: 'Roles', permission: PERMISSIONS.ROLE_VIEW },
+            { href: '/centre-config', icon: 'hub', label: 'Location Config', permission: PERMISSIONS.SYSTEM_SETTINGS_MANAGE },
             { href: '/settings', icon: 'settings', label: 'Settings', permission: PERMISSIONS.SYSTEM_SETTINGS_MANAGE },
         ]
     }
@@ -59,6 +63,22 @@ export const Sidebar: React.FC = () => {
         document.cookie = "session_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; SameSite=Strict; Secure";
         router.push("/login");
     };
+
+    const filteredNavItems = user?.role === 'SUP_ADMIN' 
+        ? NAV_ITEMS.filter(item => 
+            item.label === 'Organizations' || 
+            item.href === '/organizations' ||
+            item.label === 'Tools & Settings'
+        ).map(section => {
+            if (section.label === 'Tools & Settings') {
+                return {
+                    ...section,
+                    items: section.items?.filter(item => item.label === 'Roles')
+                };
+            }
+            return section;
+        })
+        : NAV_ITEMS;
 
     return (
         <aside className="w-64 border-r border-slate-200 dark:border-slate-800 bg-white dark:bg-background-dark flex flex-col shrink-0">
@@ -79,7 +99,7 @@ export const Sidebar: React.FC = () => {
             </PermissionGuard>
 
             <nav className="flex-1 px-4 space-y-6 overflow-y-auto custom-scrollbar pt-2 pb-6">
-                {NAV_ITEMS.map((section) => (
+                {filteredNavItems.map((section) => (
                     <div key={section.label} className="space-y-1">
                         {section.href ? (
                             <PermissionGuard requiredPermission={section.permission}>

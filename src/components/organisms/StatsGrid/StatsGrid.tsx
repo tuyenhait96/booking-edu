@@ -3,7 +3,7 @@ import { StatCard } from '@/components/molecules/StatCard';
 
 const STATS_DATA = [
     {
-        title: 'Total Tenants',
+        title: 'Total Organizations',
         value: '1,248',
         trend: '+12%',
         trendType: 'positive' as const,
