@@ -10,6 +10,7 @@ type ToggleProps = {
 export const Toggle: React.FC<ToggleProps> = ({ enabled, onChange, className }) => {
     return (
         <button
+            type="button"
             onClick={() => onChange(!enabled)}
             className={cn(
                 "relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-primary/50",

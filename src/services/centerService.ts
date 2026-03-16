@@ -78,6 +78,20 @@ const centerService = {
                 data: undefined
             };
         }
+    },
+
+    getCenterById: async (id: string): Promise<ApiResponse<Center>> => {
+        try {
+            const { data } = await axiosInstance.get<ApiResponse<Center>>(`/centers/${id}`);
+            return data;
+        } catch {
+            const center = MOCK_CENTERS.find(c => c.id === id) || MOCK_CENTERS[0];
+            return {
+                status: 200,
+                error: null,
+                data: center
+            };
+        }
     }
 };
 

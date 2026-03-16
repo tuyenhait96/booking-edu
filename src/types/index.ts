@@ -35,6 +35,14 @@ export enum Status {
     PENDING = "pending",
 }
 
+export enum ClassType {
+    REGULAR = 'REGULAR',
+    EXCLUSIVE = 'EXCLUSIVE',
+    TRIAL = 'TRIAL',
+    MAKEUP = 'MAKEUP',
+    WORKSHOP = 'WORKSHOP',
+}
+
 // ── Pagination & Filter Params ───────────────────────────────────────────────
 export interface PaginationParams {
     page?: number;
@@ -116,3 +124,85 @@ export interface Class {
     updatedBy: string | null;
     updatedAt: string;
 }
+
+export interface Subject {
+    id: string;
+    code: string;
+    name: string;
+    description: string;
+    isActive: boolean;
+    createdBy: string | null;
+    createdAt: string;
+    updatedBy: string | null;
+    updatedAt: string;
+}
+
+export interface AcademicLevel {
+    id: string;
+    code: string;
+    name: string;
+    rankOrder: number;
+    isActive: boolean;
+    createdBy: string | null;
+    createdAt: string;
+    updatedBy: string | null;
+    updatedAt: string;
+}
+
+export interface Classroom {
+    id: string;
+    centerId: string;
+    name: string;
+    code: string;
+    capacity: number;
+    description: string;
+    isActive: boolean;
+    createdBy: string | null;
+    createdAt: string;
+    updatedBy: string | null;
+    updatedAt: string;
+}
+
+export interface Topic {
+    id: string;
+    subjectId: string;
+    levelId: string;
+    title: string;
+    description: string;
+    isActive: boolean;
+    createdBy: string | null;
+    createdAt: string;
+    updatedBy: string | null;
+    updatedAt: string;
+}
+
+export interface Package {
+    id: string;
+    code: string;
+    name: string;
+    packageType: string;
+    description: string;
+    maxConcurrentBooking: number;
+    exclusiveClassAccess: boolean;
+    defaultMaxClassCapacity: number;
+    isActive: boolean;
+    createdBy: string | null;
+    createdAt: string;
+    updatedBy: string | null;
+    updatedAt: string;
+}
+
+export interface AcademicTerm {
+    id: string;
+    code: string;
+    name: string;
+    academicYear: number;
+    startsOn: string;
+    endsOn: string;
+    isActive: boolean;
+    createdBy?: string | null;
+    createdAt?: string;
+    updatedBy?: string | null;
+    updatedAt?: string;
+}
+

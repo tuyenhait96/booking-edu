@@ -8,10 +8,13 @@ import { DataTable, Column } from '@/components/molecules/Table';
 import { Center } from '@/types';
 import centerService from '@/services/centerService';
 import { CentreModal } from '@/components/organisms/CentreModal/CentreModal';
+import { CenterDetailDrawer } from '@/components/organisms/CenterDetailDrawer/CenterDetailDrawer';
+import { CreateClassModal } from '@/components/organisms/CreateClassModal/CreateClassModal';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/molecules/Toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { DeleteConfirmModal } from '@/components/molecules/DeleteConfirmModal/DeleteConfirmModal';
+import classService from '@/services/classService';
 import { formatPhone } from '@/utils/format';
 import { PERMISSIONS } from '@/utils/permissions';
 import PermissionGuard from '@/components/auth/PermissionGuard';
@@ -23,6 +26,8 @@ export default function CentersPage() {
     const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
     const [editingCenter, setEditingCenter] = useState<Center | null>(null);
     const [deletingCenter, setDeletingCenter] = useState<Center | null>(null);
+    const [selectedCenter, setSelectedCenter] = useState<Center | null>(null);
+    const [isCreateClassModalOpen, setIsCreateClassModalOpen] = useState(false);
     const itemsPerPage = 5;
 
     // Fetch centers
@@ -102,6 +107,26 @@ export default function CentersPage() {
         }
     });
 
+    // Create Class mutation
+    const createClassMutation = useMutation({
+        mutationFn: classService.createClass,
+        onSuccess: () => {
+            toast({
+                title: 'Success',
+                description: 'Class created successfully',
+                variant: 'success'
+            });
+            setIsCreateClassModalOpen(false);
+        },
+        onError: () => {
+            toast({
+                title: 'Error',
+                description: 'Failed to create class',
+                variant: 'error'
+            });
+        }
+    });
+
     const columns: Column<Center>[] = [
         {
             header: 'Center Name',
@@ -146,7 +171,10 @@ export default function CentersPage() {
                 <div className="flex justify-end gap-2">
                     <PermissionGuard requiredPermission={PERMISSIONS.CENTER_UPDATE}>
                         <button
-                            onClick={() => setEditingCenter(item)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingCenter(item);
+                            }}
                             className="text-slate-400 hover:text-blue-600 p-1"
                         >
                             <Icon name="edit" />
@@ -154,7 +182,10 @@ export default function CentersPage() {
                     </PermissionGuard>
                     <PermissionGuard requiredPermission={PERMISSIONS.CENTER_DELETE}>
                         <button
-                            onClick={() => setDeletingCenter(item)}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setDeletingCenter(item);
+                            }}
                             className="text-slate-400 hover:text-red-600 p-1"
                         >
                             <Icon name="delete" />
@@ -191,6 +222,7 @@ export default function CentersPage() {
                         data={centers}
                         columns={columns}
                         isLoading={isLoading}
+                        onRowClick={(item) => setSelectedCenter(item)}
                         pagination={{
                             currentPage,
                             totalPages: Math.ceil(centers.length / itemsPerPage),
@@ -238,6 +270,24 @@ export default function CentersPage() {
                         description="Are you sure you want to delete the center"
                         itemName={deletingCenter.name}
                         warning="This will permanently remove the center and all associated class data."
+                    />
+                )}
+
+                {/* Center Detail Drawer */}
+                <CenterDetailDrawer
+                    isOpen={!!selectedCenter}
+                    onClose={() => setSelectedCenter(null)}
+                    center={selectedCenter}
+                    onCreateClass={() => setIsCreateClassModalOpen(true)}
+                />
+
+                {/* Create Class Modal */}
+                {selectedCenter && (
+                    <CreateClassModal
+                        isOpen={isCreateClassModalOpen}
+                        onClose={() => setIsCreateClassModalOpen(false)}
+                        onSuccess={(data) => createClassMutation.mutate(data)}
+                        centerId={selectedCenter.id}
                     />
                 )}
 
