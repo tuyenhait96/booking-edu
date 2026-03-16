@@ -13,20 +13,22 @@ interface CenterDetailDrawerProps {
     onClose: () => void;
     center: Center | null;
     onCreateClass: () => void;
+    onCreateClassroom: () => void;
 }
 
 export const CenterDetailDrawer: React.FC<CenterDetailDrawerProps> = ({
     isOpen,
     onClose,
     center,
-    onCreateClass
+    onCreateClass,
+    onCreateClassroom
 }) => {
     if (!center) return null;
 
     return (
         <>
             {/* Backdrop */}
-            <div 
+            <div
                 className={cn(
                     "fixed inset-0 bg-black/20 backdrop-blur-sm z-50 transition-opacity duration-300",
                     isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
@@ -35,7 +37,7 @@ export const CenterDetailDrawer: React.FC<CenterDetailDrawerProps> = ({
             />
 
             {/* Drawer */}
-            <div 
+            <div
                 className={cn(
                     "fixed right-0 top-0 h-full w-full max-w-md bg-white dark:bg-slate-900 shadow-2xl z-50 transform transition-transform duration-300 ease-in-out border-l border-slate-200 dark:border-slate-800",
                     isOpen ? "translate-x-0" : "translate-x-full"
@@ -48,7 +50,7 @@ export const CenterDetailDrawer: React.FC<CenterDetailDrawerProps> = ({
                             <h2 className="text-xl font-bold text-slate-900 dark:text-white">Center Details</h2>
                             <p className="text-sm text-slate-500">{center.code}</p>
                         </div>
-                        <button 
+                        <button
                             onClick={onClose}
                             className="p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
                         >
@@ -122,14 +124,21 @@ export const CenterDetailDrawer: React.FC<CenterDetailDrawerProps> = ({
                         </div>
                     </div>
 
-                    {/* Actions */}
-                    <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50">
-                        <Button 
+                    <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex flex-col gap-3">
+                        <Button
                             className="w-full h-14 text-base font-bold shadow-lg shadow-primary/25 rounded-2xl flex items-center justify-center gap-2 group"
                             onClick={onCreateClass}
                         >
                             <Icon name="add" className="text-xl group-hover:rotate-90 transition-transform duration-300" />
                             <span>Create New Class</span>
+                        </Button>
+                        <Button
+                            variant="outline"
+                            className="w-full h-14 text-base font-bold border-2 rounded-2xl flex items-center justify-center gap-2 group"
+                            onClick={onCreateClassroom}
+                        >
+                            <Icon name="add" className="text-xl group-hover:rotate-90 transition-transform duration-300" />
+                            <span>Create New Classroom</span>
                         </Button>
                     </div>
                 </div>

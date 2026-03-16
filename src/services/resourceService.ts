@@ -155,6 +155,11 @@ const resourceService = {
                 ]
             };
         }
+    },
+
+    createClassroom: async (classroom: Partial<Classroom>): Promise<ApiResponse<Classroom>> => {
+        const { data } = await axiosInstance.post<ApiResponse<Classroom>>("/classrooms", classroom);
+        return data;
     }
 };
 

@@ -10,11 +10,13 @@ import centerService from '@/services/centerService';
 import { CentreModal } from '@/components/organisms/CentreModal/CentreModal';
 import { CenterDetailDrawer } from '@/components/organisms/CenterDetailDrawer/CenterDetailDrawer';
 import { CreateClassModal } from '@/components/organisms/CreateClassModal/CreateClassModal';
+import { CreateClassroomModal } from '@/components/organisms/CreateClassroomModal/CreateClassroomModal';
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/molecules/Toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { DeleteConfirmModal } from '@/components/molecules/DeleteConfirmModal/DeleteConfirmModal';
 import classService from '@/services/classService';
+import resourceService from '@/services/resourceService';
 import { formatPhone } from '@/utils/format';
 import { PERMISSIONS } from '@/utils/permissions';
 import PermissionGuard from '@/components/auth/PermissionGuard';
@@ -28,9 +30,10 @@ export default function CentersPage() {
     const [deletingCenter, setDeletingCenter] = useState<Center | null>(null);
     const [selectedCenter, setSelectedCenter] = useState<Center | null>(null);
     const [isCreateClassModalOpen, setIsCreateClassModalOpen] = useState(false);
+    const [isCreateClassroomModalOpen, setIsCreateClassroomModalOpen] = useState(false);
     const itemsPerPage = 5;
 
-    // Fetch centers
+    // ... (centers query)
     const { data: centersData, isLoading } = useQuery({
         queryKey: ['centers'],
         queryFn: async () => {
@@ -122,6 +125,27 @@ export default function CentersPage() {
             toast({
                 title: 'Error',
                 description: 'Failed to create class',
+                variant: 'error'
+            });
+        }
+    });
+
+    // Create Classroom mutation
+    const createClassroomMutation = useMutation({
+        mutationFn: resourceService.createClassroom,
+        onSuccess: () => {
+            toast({
+                title: 'Success',
+                description: 'Classroom created successfully',
+                variant: 'success'
+            });
+            setIsCreateClassroomModalOpen(false);
+            queryClient.invalidateQueries({ queryKey: ['classrooms'] });
+        },
+        onError: () => {
+            toast({
+                title: 'Error',
+                description: 'Failed to create classroom',
                 variant: 'error'
             });
         }
@@ -279,6 +303,7 @@ export default function CentersPage() {
                     onClose={() => setSelectedCenter(null)}
                     center={selectedCenter}
                     onCreateClass={() => setIsCreateClassModalOpen(true)}
+                    onCreateClassroom={() => setIsCreateClassroomModalOpen(true)}
                 />
 
                 {/* Create Class Modal */}
@@ -287,6 +312,16 @@ export default function CentersPage() {
                         isOpen={isCreateClassModalOpen}
                         onClose={() => setIsCreateClassModalOpen(false)}
                         onSuccess={(data) => createClassMutation.mutate(data)}
+                        centerId={selectedCenter.id}
+                    />
+                )}
+
+                {/* Create Classroom Modal */}
+                {selectedCenter && (
+                    <CreateClassroomModal
+                        isOpen={isCreateClassroomModalOpen}
+                        onClose={() => setIsCreateClassroomModalOpen(false)}
+                        onSuccess={(data) => createClassroomMutation.mutate(data)}
                         centerId={selectedCenter.id}
                     />
                 )}
