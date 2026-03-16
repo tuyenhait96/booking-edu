@@ -109,7 +109,7 @@ export interface Class {
     classType: string;
     classSize: number;
     splitThreshold: number;
-    attributes: any | null;
+    attributes: unknown | null;
     isActive: boolean;
     createdBy: string;
     createdAt: string;

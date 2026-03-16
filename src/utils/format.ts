@@ -55,7 +55,8 @@ export function slugify(str: string): string {
         .replace(/^-+|-+$/g, "");
 }
 
-export function formatPhone(phone: string) {
+export function formatPhone(phone: string | undefined): string {
+    if (!phone) return "-";
     const digits = phone.replace(/\D/g, "");
 
     if (digits.length === 10) {

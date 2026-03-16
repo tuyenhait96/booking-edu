@@ -165,7 +165,9 @@ export const Icon: React.FC<IconProps> = ({ name, className = '' }) => {
     const IconComponent = ICON_MAP[name];
 
     if (!IconComponent) {
-        process.env.NODE_ENV === 'development' && console.warn(`Icon "${name}" not found in ICON_MAP`);
+    if (process.env.NODE_ENV === 'development') {
+        console.warn(`Icon "${name}" not found in ICON_MAP`);
+    }
         return <span className={className}>{name}</span>;
     }
 

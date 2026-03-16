@@ -6,7 +6,6 @@ import FormField from '@/components/molecules/FormField';
 import Button from '@/components/atoms/Button';
 import { PermissionMatrix } from '@/components/molecules/PermissionMatrix';
 import { useRouter } from 'next/navigation';
-import { PERMISSION_GROUPS } from '@/utils/permissions';
 
 interface RoleFormValues {
     name: string;

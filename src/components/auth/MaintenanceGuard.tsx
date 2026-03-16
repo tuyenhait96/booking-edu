@@ -42,7 +42,7 @@ export const MaintenanceGuard: React.FC<MaintenanceGuardProps> = ({ children }) 
                     <div className="space-y-3">
                         <h1 className="text-4xl font-black text-slate-900 dark:text-white tracking-tight">Under Maintenance</h1>
                         <p className="text-lg text-slate-500 dark:text-slate-400 leading-relaxed">
-                            We're currently performing some essential updates to improve your experience. We'll be back shortly!
+                            We&apos;re currently performing some essential updates to improve your experience. We&apos;ll be back shortly!
                         </p>
                     </div>
 

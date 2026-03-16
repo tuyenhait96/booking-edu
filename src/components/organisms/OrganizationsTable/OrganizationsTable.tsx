@@ -83,7 +83,7 @@ export const OrganizationsTable: React.FC = () => {
                     description: `Organization "${data.name}" updated successfully`,
                     variant: 'success',
                 });
-            } catch (error) {
+            } catch {
                 toast({
                     title: 'Error',
                     description: 'Failed to update organization',

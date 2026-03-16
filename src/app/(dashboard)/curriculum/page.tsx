@@ -12,7 +12,16 @@ import { PERMISSIONS } from '@/utils/permissions';
 import { TopicModal } from '@/components/organisms/TopicModal/TopicModal';
 import { DeleteConfirmModal } from '@/components/molecules/DeleteConfirmModal/DeleteConfirmModal';
 
-const MOCK_TOPICS = [
+interface Topic {
+    id: string;
+    title: string;
+    subject: string;
+    level: string;
+    status: string;
+    resources: number;
+}
+
+const MOCK_TOPICS: Topic[] = [
     { id: '1', title: 'Revision on Water', subject: 'Science', level: 'Primary 5', status: 'Published', resources: 12 },
     { id: '2', title: 'Algebraic Expressions', subject: 'Mathematics', level: 'Secondary 2', status: 'Draft', resources: 8 },
     { id: '3', title: 'Shakespearean Sonnets', subject: 'English', level: 'Secondary 4', status: 'Published', resources: 15 },
@@ -21,18 +30,17 @@ const MOCK_TOPICS = [
 ];
 
 export default function CurriculumPage() {
-    const [searchTerm, setSearchTerm] = useState('');
     
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedTopic, setSelectedTopic] = useState<any>(null);
+    const [selectedTopic, setSelectedTopic] = useState<Topic | null>(null);
 
-    const handleAddTopic = (data: any) => {
+    const handleAddTopic = (data: unknown) => {
         console.log('Adding topic:', data);
     };
 
-    const handleEditTopic = (data: any) => {
+    const handleEditTopic = (data: unknown) => {
         console.log('Editing topic:', data);
     };
 
@@ -41,12 +49,12 @@ export default function CurriculumPage() {
         await new Promise(resolve => setTimeout(resolve, 1000));
     };
 
-    const openEditModal = (topic: any) => {
+    const openEditModal = (topic: Topic) => {
         setSelectedTopic(topic);
         setIsEditModalOpen(true);
     };
 
-    const openDeleteModal = (topic: any) => {
+    const openDeleteModal = (topic: Topic) => {
         setSelectedTopic(topic);
         setIsDeleteModalOpen(true);
     };
@@ -76,7 +84,7 @@ export default function CurriculumPage() {
                     <div className="flex-1">
                         <SearchBar
                             placeholder="Search topics by title..."
-                            onSearch={(val) => setSearchTerm(val)}
+                            onSearch={() => {}}
                         />
                     </div>
                     <div className="flex gap-3">
@@ -188,7 +196,7 @@ export default function CurriculumPage() {
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 onSuccess={handleEditTopic}
-                initialData={selectedTopic}
+                initialData={selectedTopic as Topic}
                 mode="edit"
             />
 

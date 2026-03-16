@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import Modal from "@/components/molecules/Modal";
@@ -51,7 +51,6 @@ export default function AddOrganizationModal({
         handleSubmit,
         formState: { errors },
         reset,
-        control,
     } = useForm<CreateOrganizationDto>({
         resolver: yupResolver(validationSchema),
         defaultValues: initialData || {

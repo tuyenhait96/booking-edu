@@ -62,7 +62,7 @@ export default function PermissionGuard({
                     <div className="space-y-1">
                         <h3 className="text-lg font-black text-slate-900 dark:text-white">Access Denied</h3>
                         <p className="text-sm text-slate-500 dark:text-slate-400 px-4">
-                            You don't have the required permissions to view this content.
+                            You don&apos;t have the required permissions to view this content.
                         </p>
                     </div>
                 </div>

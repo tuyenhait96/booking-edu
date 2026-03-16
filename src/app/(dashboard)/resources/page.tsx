@@ -7,7 +7,16 @@ import Button from "@/components/atoms/Button";
 import { ResourceModal } from '@/components/organisms/ResourceModal/ResourceModal';
 import { DeleteConfirmModal } from '@/components/molecules/DeleteConfirmModal/DeleteConfirmModal';
 
-const MOCK_CLASSROOMS = [
+interface Room {
+    id: string;
+    name: string;
+    type: string;
+    capacity: number;
+    equipment: string[];
+    status: string;
+}
+
+const MOCK_CLASSROOMS: Room[] = [
     { id: '1', name: 'Curie', type: 'Science Lab', capacity: 24, equipment: ['Microscopes', 'Gas Sockets', 'Projector'], status: 'Available' },
     { id: '2', name: 'Newton', type: 'Lecture Hall', capacity: 60, equipment: ['Sound System', 'Dual Projectors', 'Recording Gear'], status: 'Occupied' },
     { id: '3', name: 'Turing', type: 'Computer Lab', capacity: 30, equipment: ['30x Workstations', 'Fiber Internet', 'Smart Board'], status: 'Available' },
@@ -19,14 +28,14 @@ export default function ResourcesPage() {
     const [isAddModalOpen, setIsAddModalOpen] = React.useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
-    const [selectedRoom, setSelectedRoom] = React.useState<any>(null);
+    const [selectedRoom, setSelectedRoom] = React.useState<Room | null>(null);
     const [deleteWarning, setDeleteWarning] = React.useState<string | undefined>(undefined);
 
-    const handleAddRoom = (data: any) => {
+    const handleAddRoom = (data: unknown) => {
         console.log('Adding room:', data);
     };
 
-    const handleEditRoom = (data: any) => {
+    const handleEditRoom = (data: unknown) => {
         console.log('Editing room:', data);
     };
 
@@ -35,15 +44,15 @@ export default function ResourcesPage() {
         await new Promise(resolve => setTimeout(resolve, 1000));
     };
 
-    const openEditModal = (room: any) => {
+    const openEditModal = (room: Room) => {
         setSelectedRoom({
             ...room,
-            equipment: room.equipment ? room.equipment.join(', ') : ''
+            equipment: room.equipment
         });
         setIsEditModalOpen(true);
     };
 
-    const openDeleteModal = (room: any) => {
+    const openDeleteModal = (room: Room) => {
         setSelectedRoom(room);
         // Mock appointment check: If room name is "Newton" or "Einstein", it has future classes
         if (room.name === 'Newton' || room.name === 'Einstein') {
@@ -159,7 +168,13 @@ export default function ResourcesPage() {
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 onSuccess={handleEditRoom}
-                initialData={selectedRoom}
+                initialData={selectedRoom ? {
+                    name: selectedRoom.name,
+                    type: selectedRoom.type,
+                    capacity: selectedRoom.capacity,
+                    equipment: selectedRoom.equipment.join(', '),
+                    status: selectedRoom.status
+                } : undefined}
                 mode="edit"
             />
 

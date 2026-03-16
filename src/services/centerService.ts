@@ -24,7 +24,7 @@ const centerService = {
         try {
             const { data } = await axiosInstance.get<ApiResponse<Center[]>>("/centers");
             return data;
-        } catch (error) {
+        } catch {
             // console.error('API Error (getCenters), falling back to mock data:', error);
             return {
                 status: 200,
@@ -38,7 +38,7 @@ const centerService = {
         try {
             const { data } = await axiosInstance.post<ApiResponse<Center>>("/centers", payload);
             return data;
-        } catch (error) {
+        } catch {
             const newCenter = {
                 ...payload,
                 id: Math.random().toString(36).substring(2, 9),
@@ -58,7 +58,7 @@ const centerService = {
         try {
             const { data } = await axiosInstance.put<ApiResponse<Center>>(`/centers/${id}`, payload);
             return data;
-        } catch (error) {
+        } catch {
             return {
                 status: 200,
                 error: null,
@@ -71,7 +71,7 @@ const centerService = {
         try {
             const { data } = await axiosInstance.delete<ApiResponse<void>>(`/centers/${id}`);
             return data;
-        } catch (error) {
+        } catch {
             return {
                 status: 204,
                 error: null,

@@ -36,7 +36,7 @@ const dashboardService = {
         try {
             const { data } = await axiosInstance.get<ApiResponse<DashboardData>>("/dashboard");
             return data;
-        } catch (error) {
+        } catch {
             // console.error('API Error (getDashboardData), falling back to mock data:', error);
             return {
                 status: 200,

@@ -63,7 +63,7 @@ export const DeleteRoleConfirmation: React.FC<DeleteRoleConfirmationProps> = ({
                             </div>
 
                             <h3 className="text-lg font-semibold text-slate-900 dark:text-white mb-2">
-                                Delete "{role.name}"?
+                                Delete &quot;{role.name}&quot;?
                             </h3>
 
                             <p className="text-slate-600 dark:text-slate-400 mb-4">
@@ -73,7 +73,7 @@ export const DeleteRoleConfirmation: React.FC<DeleteRoleConfirmationProps> = ({
                             <div className="bg-slate-50 dark:bg-slate-800/50 rounded-lg p-4 mb-6">
                                 <div className="flex items-center gap-3">
                                     <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 text-primary">
-                                        <Icon name={role.icon as any} />
+                                        <Icon name={role.icon as string} />
                                     </div>
                                     <div className="text-left">
                                         <p className="font-medium text-slate-900 dark:text-white">{role.name}</p>

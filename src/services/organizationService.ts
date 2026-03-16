@@ -12,7 +12,7 @@ export interface CreateOrganizationDto {
   isActive: boolean;
 }
 
-export interface UpdateOrganizationDto extends Partial<CreateOrganizationDto> {}
+export type UpdateOrganizationDto = Partial<CreateOrganizationDto>;
 
 const MOCK_ORGANIZATIONS: Organization[] = [
   {
@@ -31,7 +31,7 @@ const MOCK_ORGANIZATIONS: Organization[] = [
 ];
 
 const organizationService = {
-  getOrganizations: async (params?: any): Promise<PaginatedResponse<Organization>> => {
+  getOrganizations: async (params?: unknown): Promise<PaginatedResponse<Organization>> => {
     const useMock = true; // Set to true to use mock data
     if (useMock) {
       return new Promise((resolve) => {

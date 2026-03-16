@@ -51,7 +51,7 @@ export const DeleteConfirmModal: React.FC<DeleteConfirmModalProps> = ({
                 </div>
                 
                 <p className="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
-                    {description} {itemName && <span className="font-bold text-slate-900 dark:text-white">"{itemName}"</span>}? 
+                    {description} {itemName && <span className="font-bold text-slate-900 dark:text-white">&quot;{itemName}&quot;</span>}? 
                     This action cannot be undone.
                 </p>
 

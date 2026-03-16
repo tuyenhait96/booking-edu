@@ -3,7 +3,7 @@ class AirtableService {
     private apiKey: string = "MOCK_AIRTABLE_KEY";
     private baseId: string = "appEduCMS";
 
-    async exportData(table: string, data: any[]): Promise<boolean> {
+    async exportData(table: string, data: unknown[]): Promise<boolean> {
         console.log(`Exporting ${data.length} records to Airtable table: ${table}`);
         // Simulate API request
         return new Promise((resolve) => {

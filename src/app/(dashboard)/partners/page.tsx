@@ -7,7 +7,15 @@ import Badge from "@/components/atoms/Badge";
 import { PartnerModal } from '@/components/organisms/PartnerModal/PartnerModal';
 import { DeleteConfirmModal } from '@/components/molecules/DeleteConfirmModal/DeleteConfirmModal';
 
-const MOCK_PARTNERS = [
+interface Partner {
+    id: string;
+    title: string;
+    logo: string;
+    tags: string[];
+    description: string;
+}
+
+const MOCK_PARTNERS: Partner[] = [
     {
         id: '1',
         title: 'Science Centre Singapore',
@@ -49,14 +57,14 @@ export default function PartnersPage() {
     const [isAddModalOpen, setIsAddModalOpen] = React.useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = React.useState(false);
-    const [selectedPartner, setSelectedPartner] = React.useState<any>(null);
+    const [selectedPartner, setSelectedPartner] = React.useState<Partner | null>(null);
 
-    const handleAddPartner = (data: any) => {
+    const handleAddPartner = (data: unknown) => {
         console.log('Adding partner:', data);
         // In a real app, this would refresh the data
     };
 
-    const handleEditPartner = (data: any) => {
+    const handleEditPartner = (data: unknown) => {
         console.log('Editing partner:', data);
     };
 
@@ -65,15 +73,15 @@ export default function PartnersPage() {
         await new Promise(resolve => setTimeout(resolve, 1000));
     };
 
-    const openEditModal = (partner: any) => {
+    const openEditModal = (partner: Partner) => {
         setSelectedPartner({
             ...partner,
-            tags: partner.tags.join(', ')
+            tags: partner.tags
         });
         setIsEditModalOpen(true);
     };
 
-    const openDeleteModal = (partner: any) => {
+    const openDeleteModal = (partner: Partner) => {
         setSelectedPartner(partner);
         setIsDeleteModalOpen(true);
     };
@@ -160,7 +168,11 @@ export default function PartnersPage() {
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 onSuccess={handleEditPartner}
-                initialData={selectedPartner}
+                initialData={selectedPartner ? {
+                    title: selectedPartner.title,
+                    description: selectedPartner.description,
+                    tags: selectedPartner.tags.join(', ')
+                } : undefined}
                 mode="edit"
             />
 

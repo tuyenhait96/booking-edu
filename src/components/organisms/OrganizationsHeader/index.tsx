@@ -28,10 +28,11 @@ export const OrganizationsHeader: React.FC = () => {
             });
             setIsModalOpen(false);
         },
-        onError: (error: any) => {
+        onError: (error: unknown) => {
+            const errorMessage = (error as { response?: { data?: { message?: string } } })?.response?.data?.message || 'Failed to create organization';
             toast({
                 title: 'Error',
-                description: error.response?.data?.message || 'Failed to create organization',
+                description: errorMessage,
                 variant: 'error',
             });
         },

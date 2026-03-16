@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import Modal from "@/components/molecules/Modal";
 import Button from "@/components/atoms/Button";
 import { Icon } from "@/components/atoms/Icon";
@@ -71,11 +72,14 @@ export default function DeleteUserModal({ isOpen, onClose, onConfirm, user }: De
                 {user && (
                     <div className="bg-slate-50 rounded-lg p-4 mb-8 text-left">
                         <div className="flex items-center gap-3 mb-3">
-                            <img
+                        <div className="relative w-10 h-10 rounded-full overflow-hidden">
+                            <Image
                                 src={user.avatarUrl}
                                 alt={user.name}
-                                className="w-10 h-10 rounded-full"
+                                fill
+                                className="object-cover"
                             />
+                        </div>
                             <div>
                                 <p className="font-medium text-slate-900">{user.name}</p>
                                 <p className="text-sm text-slate-500">{user.email}</p>

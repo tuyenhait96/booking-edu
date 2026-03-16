@@ -7,7 +7,16 @@ import { cn } from "@/utils/cn";
 import { FAQModal } from '@/components/organisms/FAQModal/FAQModal';
 import { DeleteConfirmModal } from '@/components/molecules/DeleteConfirmModal/DeleteConfirmModal';
 
-const MOCK_FAQS = [
+interface FAQ {
+    id: string;
+    category: string;
+    question_en: string;
+    question_zh: string;
+    answer_en: string;
+    answer_zh: string;
+}
+
+const MOCK_FAQS: FAQ[] = [
     {
         id: '1',
         category: 'Tuition',
@@ -41,13 +50,13 @@ export default function FAQPage() {
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedFAQ, setSelectedFAQ] = useState<any>(null);
+    const [selectedFAQ, setSelectedFAQ] = useState<FAQ | null>(null);
 
-    const handleAddFAQ = (data: any) => {
+    const handleAddFAQ = (data: unknown) => {
         console.log('Adding FAQ:', data);
     };
 
-    const handleEditFAQ = (data: any) => {
+    const handleEditFAQ = (data: unknown) => {
         console.log('Editing FAQ:', data);
     };
 
@@ -56,12 +65,12 @@ export default function FAQPage() {
         await new Promise(resolve => setTimeout(resolve, 1000));
     };
 
-    const openEditModal = (faq: any) => {
+    const openEditModal = (faq: FAQ) => {
         setSelectedFAQ(faq);
         setIsEditModalOpen(true);
     };
 
-    const openDeleteModal = (faq: any) => {
+    const openDeleteModal = (faq: FAQ) => {
         setSelectedFAQ(faq);
         setIsDeleteModalOpen(true);
     };
@@ -161,7 +170,7 @@ export default function FAQPage() {
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 onSuccess={handleEditFAQ}
-                initialData={selectedFAQ}
+                initialData={selectedFAQ as FAQ}
                 mode="edit"
             />
 

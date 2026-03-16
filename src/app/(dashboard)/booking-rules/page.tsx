@@ -8,9 +8,14 @@ import { PERMISSIONS } from '@/utils/permissions';
 import { ClosedDateModal } from '@/components/organisms/ClosedDateModal/ClosedDateModal';
 import { DeleteConfirmModal } from '@/components/molecules/DeleteConfirmModal/DeleteConfirmModal';
 
+interface ClosedDate {
+    date: string;
+    label: string;
+}
+
 export default function BookingRulesPage() {
     const [bookingWindow, setBookingWindow] = useState(8); // weeks
-    const [closedDates, setClosedDates] = useState([
+    const [closedDates, setClosedDates] = useState<ClosedDate[]>([
         { date: '2024-01-01', label: 'New Year\'s Day' },
         { date: '2024-02-10', label: 'Chinese New Year' },
         { date: '2024-02-11', label: 'Chinese New Year' },
@@ -18,20 +23,19 @@ export default function BookingRulesPage() {
 
     const [isAddModalOpen, setIsAddModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-    const [selectedDate, setSelectedDate] = useState<any>(null);
+    const [selectedDate, setSelectedDate] = useState<ClosedDate | null>(null);
 
-    const handleAddDate = (data: any) => {
+    const handleAddDate = (data: ClosedDate) => {
         console.log('Adding date:', data);
         setClosedDates([...closedDates, data]);
     };
 
     const handleDeleteDate = async () => {
-        console.log('Deleting date:', selectedDate?.date);
-        setClosedDates(closedDates.filter(d => d.date !== selectedDate.date));
+        setClosedDates(closedDates.filter(d => d.date !== selectedDate?.date));
         await new Promise(resolve => setTimeout(resolve, 800));
     };
 
-    const openDeleteModal = (item: any) => {
+    const openDeleteModal = (item: ClosedDate) => {
         setSelectedDate(item);
         setIsDeleteModalOpen(true);
     };

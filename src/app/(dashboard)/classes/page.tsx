@@ -91,7 +91,7 @@ export default function ClassesPage() {
                             <div>
                                 <h3 className="text-lg font-bold text-slate-900 dark:text-white">Failed to load classes</h3>
                                 <p className="text-slate-500 dark:text-slate-400 max-w-md">
-                                    {(error as any)?.message || "Something went wrong while fetching the class list. Please try again."}
+                                    {error instanceof Error ? error.message : "Something went wrong while fetching the class list. Please try again."}
                                 </p>
                             </div>
                             <button

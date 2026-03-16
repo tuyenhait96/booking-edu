@@ -12,7 +12,7 @@ interface ScheduleGridProps {
 
 export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate }) => {
     const { user } = useAuthStore();
-    
+
     // Mock package-based filtering logic
     const isRelevant = (category: string) => {
         if (!user || user.role === 'Admin') return true;
@@ -43,14 +43,6 @@ export const ScheduleGrid: React.FC<ScheduleGridProps> = ({ className, baseDate 
     };
 
     const days = getDaysOfWeek(baseDate || new Date());
-
-    const timeSlots = [
-        "08:00 AM",
-        "09:30 AM",
-        "11:00 AM",
-        "11:30 AM",
-        "01:00 PM",
-    ];
 
     return (
         <div className={cn(

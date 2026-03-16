@@ -43,12 +43,6 @@ export const PermissionMatrix: React.FC<PermissionMatrixProps> = ({ value, onCha
         return group.permissions.every(p => value.includes(p.key));
     };
 
-    const isGroupSomeSelected = (groupName: string) => {
-        const group = PERMISSION_GROUPS.find(g => g.name === groupName);
-        if (!group) return false;
-        const selectedCount = group.permissions.filter(p => value.includes(p.key)).length;
-        return selectedCount > 0 && selectedCount < group.permissions.length;
-    };
 
     return (
         <div className="space-y-6">

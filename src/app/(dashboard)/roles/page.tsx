@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { RolesPageHeader } from '@/components/organisms/RolesPageHeader';
 import { RolesTable } from '@/components/organisms/RolesTable';
 

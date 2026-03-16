@@ -2,11 +2,7 @@
 
 import React from 'react';
 import { StatsGrid } from "@/components/organisms/StatsGrid";
-import { RegistrationsChart } from "@/components/organisms/RegistrationsChart";
-import { OrganizationsTable } from "@/components/organisms/OrganizationsTable";
 import { StrategicOverview } from "@/components/organisms/StrategicOverview";
-import { useAuthStore } from "@/store/useAuthStore";
-import { Icon } from "@/components/atoms/Icon";
 import dashboardService from "@/services/dashboardService";
 import { useQuery } from '@tanstack/react-query';
 
@@ -15,9 +11,7 @@ import { PERMISSIONS } from "@/utils/permissions";
 import PermissionGuard from "@/components/auth/PermissionGuard";
 
 export default function DashboardPage() {
-    const user = useAuthStore((state) => state.user);
-
-    const { data: dashboardResponse, isLoading } = useQuery({
+    const { data: dashboardResponse } = useQuery({
         queryKey: ['dashboard'],
         queryFn: () => dashboardService.getDashboardData(),
     });

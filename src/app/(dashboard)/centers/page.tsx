@@ -50,7 +50,7 @@ export default function CentersPage() {
             queryClient.invalidateQueries({ queryKey: ['centers'] });
             setIsCreateModalOpen(false);
         },
-        onError: (error) => {
+        onError: () => {
             toast({
                 title: 'Error',
                 description: 'Failed to create center',
@@ -72,7 +72,7 @@ export default function CentersPage() {
             queryClient.invalidateQueries({ queryKey: ['centers'] });
             setEditingCenter(null);
         },
-        onError: (error) => {
+        onError: () => {
             toast({
                 title: 'Error',
                 description: 'Failed to update center',
@@ -93,7 +93,7 @@ export default function CentersPage() {
             queryClient.invalidateQueries({ queryKey: ['centers'] });
             setDeletingCenter(null);
         },
-        onError: (error) => {
+        onError: () => {
             toast({
                 title: 'Error',
                 description: 'Failed to delete center',
@@ -119,7 +119,7 @@ export default function CentersPage() {
         },
         {
             header: 'Contact Info',
-            render: (item) => (
+            render: (item: Center) => (
                 <div className="flex flex-col">
                     <span className="text-sm font-medium text-slate-900 dark:text-slate-100">{formatPhone(item.phone)}</span>
                     <span className="text-xs text-slate-500 dark:text-slate-400">{item.email}</span>
@@ -216,7 +216,12 @@ export default function CentersPage() {
                         isOpen={!!editingCenter}
                         onClose={() => setEditingCenter(null)}
                         onSuccess={(data) => updateMutation.mutate({ id: editingCenter.id, data })}
-                        initialData={editingCenter}
+                        initialData={{
+                            ...editingCenter,
+                            phone: editingCenter.phone || '',
+                            email: editingCenter.email || '',
+                            address: editingCenter.address || ''
+                        }}
                         mode="edit"
                     />
                 )}

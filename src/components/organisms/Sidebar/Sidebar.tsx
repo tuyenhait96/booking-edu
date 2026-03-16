@@ -142,7 +142,9 @@ export const Sidebar: React.FC = () => {
                         {section.href ? (
                             <PermissionGuard requiredPermission={section.permission}>
                                 <NavItem
-                                    {...section as any}
+                                    {...section}
+                                    icon={section.icon || ''}
+                                    href={section.href || ''}
                                     isActive={pathname === section.href || pathname.startsWith(section.href + '/')}
                                 />
                             </PermissionGuard>

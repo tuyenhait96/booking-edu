@@ -37,7 +37,7 @@ export const DeleteOrganizationConfirmationModal: React.FC<DeleteOrganizationCon
 
                     <div className="space-y-2">
                         <h3 className="text-lg font-semibold text-gray-900">
-                            Delete "{organizationName}"?
+                            Delete &quot;{organizationName}&quot;?
                         </h3>
                         <p className="text-sm text-gray-500">
                             Are you sure you want to delete this organization? All associated data will be permanently removed.

@@ -28,7 +28,7 @@ export const PartnerModal: React.FC<PartnerModalProps> = ({
     initialData,
     mode
 }) => {
-    const { register, handleSubmit, reset, setValue } = useForm<PartnerFormValues>();
+    const { register, handleSubmit, reset } = useForm<PartnerFormValues>();
 
     useEffect(() => {
         if (initialData) {

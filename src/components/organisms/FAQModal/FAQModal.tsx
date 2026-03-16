@@ -38,8 +38,7 @@ export const FAQModal: React.FC<FAQModalProps> = ({
     initialData,
     mode
 }) => {
-    const { register, handleSubmit, reset, setValue, watch } = useForm<FAQFormValues>();
-    const selectedCategory = watch('category');
+    const { register, handleSubmit, reset, setValue } = useForm<FAQFormValues>();
 
     useEffect(() => {
         if (initialData) {

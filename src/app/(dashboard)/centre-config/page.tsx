@@ -9,11 +9,38 @@ import { CentreModal } from '@/components/organisms/CentreModal/CentreModal';
 import { StaffAssignmentModal } from '@/components/organisms/StaffAssignmentModal/StaffAssignmentModal';
 import { DeleteConfirmModal } from '@/components/molecules/DeleteConfirmModal/DeleteConfirmModal';
 
-const MOCK_CENTRES = [
+interface Staff {
+    role: string;
+    name: string;
+    email: string;
+    avatar: string | null;
+}
+
+interface Centre {
+    id: string;
+    name: string;
+    code: string;
+    staff: Staff[];
+}
+
+interface Centre {
+    id: string;
+    name: string;
+    code: string;
+    phone: string;
+    email: string;
+    address: string;
+    staff: Staff[];
+}
+
+const MOCK_CENTRES: Centre[] = [
     {
         id: '1',
         name: 'Jurong East Hub',
         code: 'JEH-01',
+        phone: '6123 4567',
+        email: 'jurong@edu.sg',
+        address: '10 Jurong East Street 12, #01-01, Singapore 609601',
         staff: [
             { role: 'Subject Head (Math)', name: 'Dr. Sarah Chen', email: 'sarah.c@edu.sg', avatar: null },
             { role: 'Subject Head (Science)', name: 'Marcus Wong', email: 'marcus.w@edu.sg', avatar: null },
@@ -24,6 +51,9 @@ const MOCK_CENTRES = [
         id: '2',
         name: 'Tampines Mall Center',
         code: 'TMC-02',
+        phone: '6234 5678',
+        email: 'tampines@edu.sg',
+        address: '4 Tampines Central 5, #02-02, Singapore 529510',
         staff: [
             { role: 'Subject Head (Math)', name: 'James Lim', email: 'james.l@edu.sg', avatar: null },
             { role: 'Subject Head (English)', name: 'Emily Rose', email: 'emily.r@edu.sg', avatar: null },
@@ -37,14 +67,14 @@ export default function CentreConfigPage() {
     const [isStaffModalOpen, setIsStaffModalOpen] = React.useState(false);
     const [isDeleteStaffModalOpen, setIsDeleteStaffModalOpen] = React.useState(false);
     
-    const [selectedCentre, setSelectedCentre] = React.useState<any>(null);
-    const [selectedStaff, setSelectedStaff] = React.useState<any>(null);
+    const [selectedCentre, setSelectedCentre] = React.useState<Centre | null>(null);
+    const [selectedStaff, setSelectedStaff] = React.useState<Staff | null>(null);
 
-    const handleCentreSuccess = (data: any) => {
+    const handleCentreSuccess = (data: unknown) => {
         console.log('Centre updated:', data);
     };
 
-    const handleStaffSuccess = (data: any) => {
+    const handleStaffSuccess = (data: unknown) => {
         console.log('Staff assignment updated:', data);
     };
 
@@ -53,21 +83,17 @@ export default function CentreConfigPage() {
         await new Promise(resolve => setTimeout(resolve, 800));
     };
 
-    const openEditCentre = (center: any) => {
+    const openEditCentre = (center: Centre) => {
         setSelectedCentre(center);
         setIsCentreModalOpen(true);
     };
 
-    const openAssignStaff = (center: any, member?: any) => {
+    const openAssignStaff = (center: Centre, member?: Staff) => {
         setSelectedCentre(center);
-        setSelectedStaff(member ? { staffName: member.name, role: member.role } : null);
+        setSelectedStaff(member ? member : null);
         setIsStaffModalOpen(true);
     };
 
-    const openUnassignStaff = (member: any) => {
-        setSelectedStaff(member);
-        setIsDeleteStaffModalOpen(true);
-    };
 
     return (
         <div className="flex-1 flex flex-col overflow-y-auto animate-fade-in">
@@ -118,6 +144,15 @@ export default function CentreConfigPage() {
                                                 <p className="text-xs text-slate-500 truncate">{member.email}</p>
                                             </div>
                                             <button 
+                                                onClick={() => {
+                                                    setSelectedStaff(member);
+                                                    setIsDeleteStaffModalOpen(true);
+                                                }}
+                                                className="p-2 text-slate-400 hover:text-rose-500 transition-all"
+                                            >
+                                                <Icon name="delete" />
+                                            </button>
+                                            <button 
                                                 onClick={() => openAssignStaff(center, member)}
                                                 className="p-2 text-slate-400 hover:text-primary transition-all"
                                             >
@@ -144,14 +179,20 @@ export default function CentreConfigPage() {
                 isOpen={isCentreModalOpen}
                 onClose={() => setIsCentreModalOpen(false)}
                 onSuccess={handleCentreSuccess}
-                initialData={selectedCentre}
+                initialData={selectedCentre ? {
+                    name: selectedCentre.name,
+                    code: selectedCentre.code,
+                    phone: selectedCentre.phone,
+                    email: selectedCentre.email,
+                    address: selectedCentre.address
+                } : undefined}
             />
 
             <StaffAssignmentModal
                 isOpen={isStaffModalOpen}
                 onClose={() => setIsStaffModalOpen(false)}
                 onSuccess={handleStaffSuccess}
-                initialData={selectedStaff}
+                initialData={selectedStaff ? { staffName: selectedStaff.name, role: selectedStaff.role } : undefined}
             />
 
             <DeleteConfirmModal

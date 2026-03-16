@@ -10,24 +10,6 @@ import { PERMISSIONS } from '@/utils/permissions';
 // Helper function to map simple string permissions to PermissionEntry format
 function mapPermissions(permissionStrings: string[]) {
     // Default modules from RoleForm
-    const DEFAULT_MODULES = [
-        'Organizations',
-        'Roles',
-        'Dashboard',
-        'Centers',
-        'Classes',
-    ];
-
-    // Create initial permissions with all false
-    const initialPermissions = DEFAULT_MODULES.map(module => ({
-        module,
-        permissions: {
-            view: false,
-            create: false,
-            edit: false,
-            delete: false
-        }
-    }));
 
     // Check if this is Super Admin (has "+12 more" in permissions)
     const isSuperAdmin = permissionStrings.some(perm => perm.includes('+') && perm.includes('more'));

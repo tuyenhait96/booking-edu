@@ -1,7 +1,7 @@
 
 "use client";
 
-import React, { useState } from 'react';
+import React from 'react';
 import { cn } from "@/utils/cn";
 import { Icon } from "@/components/atoms/Icon";
 import Button from "@/components/atoms/Button";
@@ -35,7 +35,7 @@ export default function AnnouncementsPage() {
                         <h3 className="text-xs font-black text-slate-400 uppercase tracking-[0.2em] mb-6">Quick Compose</h3>
                         <div className="space-y-4">
                             <Input placeholder="Announcement Title" className="bg-slate-50/50 dark:bg-slate-800/50 border-none font-bold placeholder:text-slate-400" />
-                            <Select 
+                            <Select
                                 options={[
                                     { value: 'all', label: 'All Users' },
                                     { value: 'parents', label: 'Parents Only' },
@@ -43,7 +43,7 @@ export default function AnnouncementsPage() {
                                 ]}
                                 placeholder="Select Target Audience"
                             />
-                            <textarea 
+                            <textarea
                                 className="w-full min-h-[200px] p-4 rounded-2xl bg-slate-50/50 dark:bg-slate-800/50 border-none text-slate-900 dark:text-white placeholder:text-slate-400 font-medium focus:ring-2 focus:ring-primary/20 transition-all resize-none"
                                 placeholder="Write your message here..."
                             />
@@ -75,7 +75,7 @@ export default function AnnouncementsPage() {
                                     <span className={cn(
                                         "text-[10px] font-black uppercase px-2 py-0.5 rounded-md",
                                         ann.status === 'Sent' ? "bg-emerald-500/10 text-emerald-600" :
-                                        ann.status === 'Draft' ? "bg-slate-100 text-slate-500" : "bg-primary/10 text-primary"
+                                            ann.status === 'Draft' ? "bg-slate-100 text-slate-500" : "bg-primary/10 text-primary"
                                     )}>
                                         {ann.status}
                                     </span>

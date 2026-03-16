@@ -86,7 +86,7 @@ const classService = {
                             status: 200,
                             error: null,
                             data: MOCK_CLASSES
-                        } as any);
+                        });
                     }
                 }, 500);
             });
@@ -107,7 +107,7 @@ const classService = {
                             status: 200,
                             error: null,
                             data: MOCK_CLASSES_ONGOING
-                        } as any);
+                        });
                     }
                 }, 500);
             });
@@ -128,7 +128,7 @@ const classService = {
                             status: 200,
                             error: null,
                             data: MOCK_CLASSES_COMPLETED
-                        } as any);
+                        });
                     }
                 }, 500);
             });
@@ -155,7 +155,7 @@ const classService = {
                             status: 201,
                             error: null,
                             data: newClass
-                        } as any);
+                        });
                     }
                 }, 500);
             });

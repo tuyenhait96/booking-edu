@@ -11,12 +11,10 @@ import { useRouter } from "next/navigation";
 export default function EduCMSLoginPage() {
     const router = useRouter();
     const login = useAuthStore((state) => state.login);
-    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
 
     const handleLogin = async (e: FormEvent) => {
         e.preventDefault();
-        setIsLoading(true);
         setError(null);
 
         const formData = new FormData(e.target as HTMLFormElement);
@@ -25,7 +23,7 @@ export default function EduCMSLoginPage() {
 
         try {
             const response = await authService.login({ email, password });
-            
+
             if (response.data) {
                 const { user, accessToken } = response.data;
                 // Map the login response user to our store's User type
@@ -44,7 +42,7 @@ export default function EduCMSLoginPage() {
                 // Set for 1 day (align with token expiry if possible)
                 const expires = new Date(Date.now() + 24 * 60 * 60 * 1000).toUTCString();
                 document.cookie = `session_token=${accessToken}; path=/; expires=${expires}; SameSite=Strict; Secure`;
-                
+
                 if (user.role === 'SUP_ADMIN') {
                     router.push("/organizations");
                 } else {
@@ -53,10 +51,11 @@ export default function EduCMSLoginPage() {
             } else {
                 setError(response.error || "Login failed");
             }
-        } catch (err: any) {
-            setError(err.response?.data?.message || "An error occurred during login");
-        } finally {
-            setIsLoading(false);
+        } catch (err: unknown) {
+            const errorMessage = err instanceof Error && 'response' in err 
+                ? (err as { response?: { data?: { message?: string } } }).response?.data?.message 
+                : "An error occurred during login";
+            setError(errorMessage ?? "An error occurred during login");
         }
     };
 
