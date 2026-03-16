@@ -1,0 +1,11 @@
+services:
+  next-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: tuyenha96/booking-edu:latest # Replace with your Docker Hub username
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+    restart: always
