@@ -143,11 +143,10 @@ export const CreateClassModal: React.FC<CreateClassModalProps> = ({
                 acc[curr.key] = curr.value;
             }
             return acc;
-        }, {} as Record<string, any>);
-
-        const { attributes, ...rest } = data;
+        }, {} as Record<string, string>);
+ 
         const payload = {
-            ...rest,
+            ...data,
             attributes: attributesObj
         };
 

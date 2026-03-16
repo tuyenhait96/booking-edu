@@ -26,49 +26,15 @@ interface NavItemConfig {
 
 const NAV_ITEMS: NavItemConfig[] = [
     { href: '/dashboard', icon: 'dashboard', label: 'Dashboard', permission: PERMISSIONS.DASHBOARD_VIEW },
-    { href: '/center-dashboard', icon: 'analytics', label: 'Center Overview', permission: PERMISSIONS.CENTER_MANAGE },
-    { href: '/users', icon: 'group', label: 'Users', permission: PERMISSIONS.USER_VIEW },
     { href: '/organizations', icon: 'corporate_fare', label: 'Organizations', permission: PERMISSIONS.ORGANIZATION_VIEW },
     { href: '/centers', icon: 'storefront', label: 'Centers', permission: PERMISSIONS.CENTER_MANAGE },
     { href: '/classes', icon: 'school', label: 'Classes', permission: PERMISSIONS.CLASSES_VIEW },
-    {
-        label: 'Operations',
-        hideLabel: true,
-        permission: PERMISSIONS.CALENDAR_VIEW,
-        items: [
-            { href: '/schedule', icon: 'calendar_month', label: 'Schedule', permission: PERMISSIONS.CALENDAR_VIEW },
-            { href: '/booking-rules', icon: 'rule', label: 'Booking Rules', permission: PERMISSIONS.BOOKING_RULES_MANAGE },
-            { href: '/curriculum', icon: 'auto_stories', label: 'Curriculum', permission: PERMISSIONS.CURRICULUM_VIEW },
-            { href: '/resources', icon: 'meeting_room', label: 'Resources', permission: PERMISSIONS.CLASSROOM_MANAGE },
-            { href: '/partners', icon: 'handshake', label: 'Partners', permission: PERMISSIONS.BENEFIT_VIEW },
-        ]
-    },
-    {
-        label: 'Global Content',
-        hideLabel: true,
-        permission: PERMISSIONS.FAQ_VIEW,
-        items: [
-            { href: '/faq', icon: 'quiz', label: 'FAQ System', permission: PERMISSIONS.FAQ_VIEW },
-            { href: '/announcements', icon: 'campaign', label: 'Announcements', permission: PERMISSIONS.ANNOUNCEMENT_MANAGE },
-        ]
-    },
-    {
-        label: 'Evaluations',
-        hideLabel: true,
-        permission: PERMISSIONS.REPORT_VIEW,
-        items: [
-            { href: '/reports', icon: 'assessment', label: 'Reports', permission: PERMISSIONS.REPORT_VIEW },
-            { href: '/approvals', icon: 'fact_check', label: 'Approvals', permission: PERMISSIONS.REPORT_APPROVE },
-        ]
-    },
     {
         label: 'Tools & Settings',
         hideLabel: true,
         permission: PERMISSIONS.ROLE_VIEW,
         items: [
             { href: '/roles', icon: 'admin_panel_settings', label: 'Roles', permission: PERMISSIONS.ROLE_VIEW },
-            { href: '/centre-config', icon: 'hub', label: 'Location Config', permission: PERMISSIONS.SYSTEM_SETTINGS_MANAGE },
-            { href: '/settings', icon: 'settings', label: 'Settings', permission: PERMISSIONS.SYSTEM_SETTINGS_MANAGE },
         ]
     }
 ];
@@ -88,21 +54,7 @@ export const Sidebar: React.FC = () => {
 
     const getFilteredNavItems = () => {
         if (user?.role === 'SUP_ADMIN') {
-            return NAV_ITEMS.filter(item =>
-                item.label === 'Dashboard' ||
-                item.label === 'Organizations' ||
-                item.label === 'Centers' ||
-                item.label === 'Classes' ||
-                item.label === 'Tools & Settings'
-            ).map(section => {
-                if (section.label === 'Tools & Settings') {
-                    return {
-                        ...section,
-                        items: section.items?.filter(item => item.label === 'Roles')
-                    };
-                }
-                return section;
-            });
+            return NAV_ITEMS;
         }
 
         if (user?.role === 'ORG_ADMIN') {

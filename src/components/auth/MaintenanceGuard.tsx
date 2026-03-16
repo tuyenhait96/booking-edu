@@ -3,8 +3,6 @@
 import React from 'react';
 import { useCentreStore } from '@/store/useCentreStore';
 import { useAuthStore } from '@/store/useAuthStore';
-import { usePermission } from '@/hooks/usePermission';
-import { PERMISSIONS } from '@/utils/permissions';
 import { Icon } from '@/components/atoms/Icon';
 import Button from '@/components/atoms/Button';
 
@@ -15,14 +13,12 @@ interface MaintenanceGuardProps {
 export const MaintenanceGuard: React.FC<MaintenanceGuardProps> = ({ children }) => {
     const { isMaintenanceMode } = useCentreStore();
     const { user } = useAuthStore();
-    const { hasPermission } = usePermission();
 
     // If maintenance mode is active and user is NOT an admin/super_admin/platform_admin, show maintenance screen
-    const canBypass = 
-        user?.role === 'admin' || 
-        user?.role === 'super_admin' || 
-        user?.role === 'platform_admin' ||
-        hasPermission(PERMISSIONS.SYSTEM_MAINTENANCE_MANAGE);
+    const canBypass =
+        user?.role === 'admin' ||
+        user?.role === 'super_admin' ||
+        user?.role === 'platform_admin';
 
     const showMaintenance = isMaintenanceMode && !canBypass;
 
@@ -52,7 +48,7 @@ export const MaintenanceGuard: React.FC<MaintenanceGuardProps> = ({ children }) 
                         </p>
                     </div>
 
-                    <Button 
+                    <Button
                         onClick={() => window.location.reload()}
                         className="w-full bg-primary text-white py-4 rounded-xl font-bold shadow-xl shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-all"
                     >
