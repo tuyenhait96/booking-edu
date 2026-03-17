@@ -35,7 +35,6 @@ const validationSchema = yup.object({
         .typeError("Max centers must be a number")
         .min(1, "At least 1 center is required")
         .required("Max centers is required"),
-    isActive: yup.boolean().required(),
 });
 
 export default function AddOrganizationModal({
@@ -59,12 +58,16 @@ export default function AddOrganizationModal({
             email: "",
             address: "",
             maxCenters: 1,
-            isActive: true,
         },
     });
 
     const handleFormSubmit = (data: CreateOrganizationDto) => {
+        console.log("AddOrganizationModal: Form submitted with data:", data);
         onSubmit(data);
+    };
+
+    const onFormError = (errors: any) => {
+        console.log("AddOrganizationModal: Validation errors:", errors);
     };
 
     const handleClose = () => {
@@ -89,7 +92,7 @@ export default function AddOrganizationModal({
             description={mode === 'add' ? "Create a new organization account" : "Update organization information"}
             size="lg"
         >
-            <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+            <form onSubmit={handleSubmit(handleFormSubmit, onFormError)} className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <FormField
                         id="name"
@@ -141,7 +144,7 @@ export default function AddOrganizationModal({
                             id="maxCenters"
                             type="number"
                             placeholder="e.g., 4"
-                            {...register("maxCenters")}
+                            {...register("maxCenters", { valueAsNumber: true })}
                         />
                     </FormField>
 
@@ -158,17 +161,6 @@ export default function AddOrganizationModal({
                             {...register("address")}
                         />
                     </FormField>
-
-                    <div className="col-span-1 md:col-span-2">
-                        <label className="flex items-center gap-2 cursor-pointer">
-                            <input
-                                type="checkbox"
-                                {...register("isActive")}
-                                className="size-4 rounded border-gray-300 text-primary focus:ring-primary"
-                            />
-                            <span className="text-sm font-medium text-gray-700">Status</span>
-                        </label>
-                    </div>
                 </div>
 
                 <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200 mt-6 pt-6">

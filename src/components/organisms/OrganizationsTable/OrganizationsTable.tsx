@@ -55,7 +55,6 @@ export const OrganizationsTable: React.FC = () => {
             email: organization.email,
             address: organization.address,
             maxCenters: organization.maxCenters,
-            isActive: organization.isActive
         };
         setSelectedOrganization(organization);
         setEditFormData(formData);

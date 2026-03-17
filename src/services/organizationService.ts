@@ -9,7 +9,6 @@ export interface CreateOrganizationDto {
   email: string;
   address: string;
   maxCenters: number;
-  isActive: boolean;
 }
 
 export type UpdateOrganizationDto = Partial<CreateOrganizationDto>;
@@ -69,7 +68,7 @@ const organizationService = {
   },
 
   createOrganization: async (payload: CreateOrganizationDto): Promise<ApiResponse<Organization>> => {
-    const useMock = true;
+    const useMock = false; // Changed from true to allow real API calls
     if (useMock) {
       return new Promise((resolve) => {
         const newOrganization = {
@@ -95,7 +94,7 @@ const organizationService = {
     id: string,
     payload: UpdateOrganizationDto
   ): Promise<ApiResponse<Organization>> => {
-    const { data } = await axiosInstance.put<ApiResponse<Organization>>(
+    const { data } = await axiosInstance.patch<ApiResponse<Organization>>(
       `/organizations/${id}`,
       payload
     );
@@ -123,4 +122,4 @@ const organizationService = {
   },
 };
 
-export default organizationService;
+export default organizationService;

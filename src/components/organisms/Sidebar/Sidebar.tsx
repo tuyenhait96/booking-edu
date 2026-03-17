@@ -13,7 +13,7 @@ import { CentreSwitcher } from '@/components/molecules/CentreSwitcher/CentreSwit
 interface NavItemConfig {
     href?: string;
     icon?: string;
-    label: string;
+    label?: string;
     permission: string;
     items?: {
         href: string;
@@ -30,7 +30,6 @@ const NAV_ITEMS: NavItemConfig[] = [
     { href: '/centers', icon: 'storefront', label: 'Centers', permission: PERMISSIONS.CENTER_MANAGE },
     { href: '/classes', icon: 'school', label: 'Classes', permission: PERMISSIONS.CLASSES_VIEW },
     {
-        label: 'Center Management',
         permission: PERMISSIONS.TEACHER_MANAGE,
         items: [
             { href: '/teachers', icon: 'teacher', label: 'Teachers', permission: PERMISSIONS.TEACHER_MANAGE },
@@ -70,17 +69,17 @@ export const Sidebar: React.FC = () => {
 
         if (user?.role === 'ORG_ADMIN') {
             return NAV_ITEMS.filter(item =>
-                item.label === 'Dashboard' ||
-                item.label === 'Centers' ||
-                item.label === 'Classes'
+                item.href === '/dashboard' ||
+                item.href === '/centers' ||
+                item.href === '/classes'
             );
         }
 
         if (user?.role === 'CENTER_MANAGER') {
             return NAV_ITEMS.filter(item =>
-                item.label === 'Dashboard' ||
-                item.label === 'Classes' ||
-                item.label === 'Center Management'
+                item.href === '/dashboard' ||
+                item.href === '/classes' ||
+                (!item.href && item.items?.some(subItem => subItem.href === '/teachers'))
             );
         }
 
@@ -108,12 +107,13 @@ export const Sidebar: React.FC = () => {
             </PermissionGuard>
 
             <nav className="flex-1 px-4 space-y-1 overflow-y-auto custom-scrollbar pt-2 pb-6">
-                {filteredNavItems.map((section) => (
-                    <div key={section.label} className="space-y-1">
+                {filteredNavItems.map((section, index) => (
+                    <div key={section.href || section.label || index} className="space-y-1">
                         {section.href ? (
                             <PermissionGuard requiredPermission={section.permission}>
                                 <NavItem
                                     {...section}
+                                    label={section.label || ''}
                                     icon={section.icon || ''}
                                     href={section.href || ''}
                                     isActive={pathname === section.href || pathname.startsWith(section.href + '/')}
@@ -121,14 +121,9 @@ export const Sidebar: React.FC = () => {
                             </PermissionGuard>
                         ) : (
                             <>
-                                {section.label && !section.hideLabel && (
-                                    <p className="px-4 text-[10px] font-black uppercase tracking-[0.2em] text-white/40 mb-2">
-                                        {section.label}
-                                    </p>
-                                )}
                                 <div className="space-y-1">
                                     {section.items?.map((item) => (
-                                        <PermissionGuard key={item.label} requiredPermission={item.permission}>
+                                        <PermissionGuard key={item.href} requiredPermission={item.permission}>
                                             <NavItem
                                                 {...item}
                                                 isActive={pathname === item.href || pathname.startsWith(item.href + '/')}
