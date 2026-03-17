@@ -6,11 +6,25 @@ const MOCK_CENTERS: Center[] = [
     {
         "id": "2c0ea621-55a9-42a5-afeb-1be83ad95f16",
         "organizationId": "b4d8887f-67cb-4719-bc6f-fb4230d4d5d2",
-        "name": "Tampines",
-        "code": "TAMPINES",
+        "name": "Tampines 1",
+        "code": "TAMPINES-1",
         "phone": "0281111111",
-        "email": "tampines@example.com",
-        "address": "Tampines Mall",
+        "email": "tampines1@example.com",
+        "address": "Tampines Mall 1",
+        "isActive": true,
+        "createdBy": "5cf0b35d-2d9f-4df0-9009-e17be70cd320",
+        "createdAt": "2026-03-12T08:32:00.000Z",
+        "updatedBy": null,
+        "updatedAt": "2026-03-12T08:32:00.000Z"
+    },
+    {
+        "id": "3c0ea621-55a9-42a5-afeb-1be83ad95f16",
+        "organizationId": "b4d8887f-67cb-4719-bc6f-fb4230d4d5d2",
+        "name": "Tampines 2",
+        "code": "TAMPINES-2",
+        "phone": "0281111112",
+        "email": "tampines2@example.com",
+        "address": "Tampines Mall 2",
         "isActive": true,
         "createdBy": "5cf0b35d-2d9f-4df0-9009-e17be70cd320",
         "createdAt": "2026-03-12T08:32:00.000Z",
@@ -25,7 +39,6 @@ const centerService = {
             const { data } = await axiosInstance.get<ApiResponse<Center[]>>("/centers");
             return data;
         } catch {
-            // console.error('API Error (getCenters), falling back to mock data:', error);
             return {
                 status: 200,
                 error: null,
@@ -41,7 +54,7 @@ const centerService = {
         } catch {
             const newCenter = {
                 ...payload,
-                id: Math.random().toString(36).substring(2, 9),
+                id: "center-" + Math.random().toString(36).substring(2, 9),
                 isActive: true,
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString()
@@ -56,26 +69,13 @@ const centerService = {
 
     updateCenter: async (id: string, payload: Partial<Center>): Promise<ApiResponse<Center>> => {
         try {
-            const { data } = await axiosInstance.put<ApiResponse<Center>>(`/centers/${id}`, payload);
+            const { data } = await axiosInstance.patch<ApiResponse<Center>>(`/centers/${id}`, payload);
             return data;
         } catch {
             return {
                 status: 200,
                 error: null,
                 data: { ...payload, id, updatedAt: new Date().toISOString() } as Center
-            };
-        }
-    },
-
-    deleteCenter: async (id: string): Promise<ApiResponse<void>> => {
-        try {
-            const { data } = await axiosInstance.delete<ApiResponse<void>>(`/centers/${id}`);
-            return data;
-        } catch {
-            return {
-                status: 204,
-                error: null,
-                data: undefined
             };
         }
     },
@@ -94,39 +94,73 @@ const centerService = {
         }
     },
 
-    createCenterManager: async (payload: { fullName: string; email: string; centerId: string }): Promise<ApiResponse<void>> => {
-        // Mock implementation
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({
-                    status: 201,
-                    success: true,
-                    message: 'Center manager account created successfully',
-                    data: undefined
-                });
-            }, 500);
-        });
+    createCenterManager: async (payload: {
+        name: string;
+        email: string;
+        phone: string;
+        organizationId: string;
+        centerId: string;
+        profile: {
+            centerIds: string[];
+        }
+    }): Promise<ApiResponse<any>> => {
+        try {
+            const { data } = await axiosInstance.post<ApiResponse<any>>("/centers/create-center", payload);
+            return data;
+        } catch {
+            return {
+                status: 201,
+                error: null,
+                data: {
+                    message: "Center management account provisioned successfully. Use the temporary password to sign in and reset it on first login.",
+                    provisionedAccount: {
+                        id: "user-uuid",
+                        email: payload.email,
+                        phone: payload.phone,
+                        role: "CENTER_MANAGEMENT",
+                        temporaryPassword: "TempPass@123"
+                    }
+                }
+            };
+        }
     },
 
     getCenterStats: async (centerId: string): Promise<ApiResponse<any>> => {
-        // Mock implementation
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({
-                    status: 200,
-                    success: true,
-                    data: {
-                        centerId,
-                        totalStudents: 156,
-                        activeClasses: 12,
-                        totalRevenue: 45000,
-                        attendanceRate: 94.5,
-                        monthlyGrowth: 8.2,
-                        upcomingSessions: 5
+        try {
+            const { data } = await axiosInstance.get<ApiResponse<any>>(`/dashboard/centers/${centerId}`);
+            return data;
+        } catch {
+            return {
+                status: 200,
+                error: null,
+                data: {
+                    center: {
+                        id: centerId,
+                        organizationId: "org-uuid",
+                        name: "Center A",
+                        code: "CTR-A",
+                        isActive: true
+                    },
+                    summary: {
+                        activeClasses: 5,
+                        ongoingClasses: 3,
+                        completedClasses: 2,
+                        activeTeachers: 10,
+                        activeStudents: 120,
+                        activeParents: 95,
+                        todayBookings: 14,
+                        weeklyBookings: 41,
+                        pendingBookings: 3,
+                        todaySessions: 8,
+                        todayAbsences: 1,
+                        attendanceRate: 0.98,
+                        reportsPendingApproval: 4,
+                        activeAnnouncements: 2,
+                        openFeedbacks: 1
                     }
-                });
-            }, 500);
-        });
+                }
+            };
+        }
     }
 };
 

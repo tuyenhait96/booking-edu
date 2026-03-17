@@ -14,7 +14,6 @@ import { CreateClassroomModal } from '@/components/organisms/CreateClassroomModa
 import { useToast } from '@/hooks/useToast';
 import { ToastContainer } from '@/components/molecules/Toast';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { DeleteConfirmModal } from '@/components/molecules/DeleteConfirmModal/DeleteConfirmModal';
 import classService from '@/services/classService';
 import resourceService from '@/services/resourceService';
 import { formatPhone } from '@/utils/format';
@@ -22,6 +21,7 @@ import { PERMISSIONS } from '@/utils/permissions';
 import PermissionGuard from '@/components/auth/PermissionGuard';
 import { CreateCenterManagerModal } from '@/components/organisms/CreateCenterManagerModal/CreateCenterManagerModal';
 import { useRouter } from 'next/navigation';
+import { useAuthStore } from '@/store/useAuthStore';
 
 export default function CentersPage() {
     const queryClient = useQueryClient();
@@ -35,6 +35,7 @@ export default function CentersPage() {
     const [isCreateClassroomModalOpen, setIsCreateClassroomModalOpen] = useState(false);
     const [isCreateManagerModalOpen, setIsCreateManagerModalOpen] = useState(false);
     const router = useRouter();
+    const user = useAuthStore(state => state.user);
     const itemsPerPage = 5;
 
     // ... (centers query)
@@ -52,7 +53,15 @@ export default function CentersPage() {
 
     // Create mutation
     const createMutation = useMutation({
-        mutationFn: centerService.createCenter,
+        mutationFn: (data: any) =>
+            centerService.createCenter({
+                organizationId: user?.organizationId,
+                name: data.name,
+                code: data.code,
+                phone: data.phone,
+                email: data.email,
+                address: data.address
+            }),
         onSuccess: () => {
             toast({
                 title: 'Success',
@@ -73,8 +82,15 @@ export default function CentersPage() {
 
     // Update mutation
     const updateMutation = useMutation({
-        mutationFn: ({ id, data }: { id: string; data: Partial<Center> }) =>
-            centerService.updateCenter(id, data),
+        mutationFn: ({ id, data }: { id: string; data: any }) =>
+            centerService.updateCenter(id, {
+                organizationId: user?.organizationId || editingCenter?.organizationId,
+                name: data.name,
+                code: data.code,
+                phone: data.phone,
+                email: data.email,
+                address: data.address
+            }),
         onSuccess: () => {
             toast({
                 title: 'Success',
@@ -88,27 +104,6 @@ export default function CentersPage() {
             toast({
                 title: 'Error',
                 description: 'Failed to update center',
-                variant: 'error'
-            });
-        }
-    });
-
-    // Delete mutation
-    const deleteMutation = useMutation({
-        mutationFn: centerService.deleteCenter,
-        onSuccess: () => {
-            toast({
-                title: 'Success',
-                description: 'Center deleted successfully',
-                variant: 'success'
-            });
-            queryClient.invalidateQueries({ queryKey: ['centers'] });
-            setDeletingCenter(null);
-        },
-        onError: () => {
-            toast({
-                title: 'Error',
-                description: 'Failed to delete center',
                 variant: 'error'
             });
         }
@@ -157,11 +152,20 @@ export default function CentersPage() {
 
     // Create Manager mutation
     const createManagerMutation = useMutation({
-        mutationFn: centerService.createCenterManager,
+        mutationFn: (data: any) => centerService.createCenterManager({
+            name: data.fullName,
+            email: data.email,
+            phone: data.phone,
+            organizationId: user?.organizationId || '',
+            centerId: data.centerIds[0] || '', // Still send the first one as primary centerId if needed
+            profile: {
+                centerIds: data.centerIds
+            }
+        }),
         onSuccess: (response) => {
             toast({
                 title: 'Success',
-                description: response.message || 'Center manager account created successfully',
+                description: response.data?.message || response.message || 'Center manager account created successfully',
                 variant: 'success'
             });
             setIsCreateManagerModalOpen(false);
@@ -228,17 +232,6 @@ export default function CentersPage() {
                             <Icon name="edit" />
                         </button>
                     </PermissionGuard>
-                    <PermissionGuard requiredPermission={PERMISSIONS.CENTER_DELETE}>
-                        <button
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                setDeletingCenter(item);
-                            }}
-                            className="text-slate-400 hover:text-red-600 p-1"
-                        >
-                            <Icon name="delete" />
-                        </button>
-                    </PermissionGuard>
                     <button
                         onClick={(e) => {
                             e.stopPropagation();
@@ -265,16 +258,6 @@ export default function CentersPage() {
                         </p>
                     </div>
                     <div className="flex items-center gap-3">
-                        <PermissionGuard requiredPermission={PERMISSIONS.CENTER_CREATE}>
-                            <Button
-                                variant="outline"
-                                className="flex items-center gap-2 border-primary text-primary hover:bg-primary/5"
-                                onClick={() => setIsCreateManagerModalOpen(true)}
-                            >
-                                <Icon name="person_add" className="text-lg" />
-                                <span>Create Center Manager Account</span>
-                            </Button>
-                        </PermissionGuard>
                         <PermissionGuard requiredPermission={PERMISSIONS.CENTER_CREATE}>
                             <Button
                                 className="flex items-center gap-2"
@@ -319,7 +302,8 @@ export default function CentersPage() {
                         onClose={() => setEditingCenter(null)}
                         onSuccess={(data) => updateMutation.mutate({ id: editingCenter.id, data })}
                         initialData={{
-                            ...editingCenter,
+                            name: editingCenter.name,
+                            code: editingCenter.code,
                             phone: editingCenter.phone || '',
                             email: editingCenter.email || '',
                             address: editingCenter.address || ''
@@ -328,28 +312,12 @@ export default function CentersPage() {
                     />
                 )}
 
-                {/* Delete Modal */}
-                {deletingCenter && (
-                    <DeleteConfirmModal
-                        isOpen={!!deletingCenter}
-                        onClose={() => setDeletingCenter(null)}
-                        onConfirm={async () => {
-                            await deleteMutation.mutateAsync(deletingCenter.id);
-                        }}
-                        title="Delete Center"
-                        description="Are you sure you want to delete the center"
-                        itemName={deletingCenter.name}
-                        warning="This will permanently remove the center and all associated class data."
-                    />
-                )}
-
                 {/* Center Detail Drawer */}
                 <CenterDetailDrawer
                     isOpen={!!selectedCenter}
                     onClose={() => setSelectedCenter(null)}
                     center={selectedCenter}
-                    onCreateClass={() => setIsCreateClassModalOpen(true)}
-                    onCreateClassroom={() => setIsCreateClassroomModalOpen(true)}
+                    onCreateManager={() => setIsCreateManagerModalOpen(true)}
                 />
 
                 {/* Create Class Modal */}
@@ -378,6 +346,7 @@ export default function CentersPage() {
                     onClose={() => setIsCreateManagerModalOpen(false)}
                     centers={centers}
                     onSuccess={(data) => createManagerMutation.mutate(data)}
+                    initialCenterId={selectedCenter?.id}
                 />
 
                 <ToastContainer toasts={toasts} removeToast={removeToast} />

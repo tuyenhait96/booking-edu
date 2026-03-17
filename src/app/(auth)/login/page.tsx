@@ -32,6 +32,7 @@ export default function EduCMSLoginPage() {
                     email: user.email,
                     role: user.role,
                     permissions: user.permissions,
+                    organizationId: user.organizationId,
                     name: user.email.split("@")[0], // Fallback name
                 }, accessToken);
 

@@ -8,6 +8,7 @@ export interface User {
     role: string;
     avatar?: string;
     permissions: string[];
+    organizationId?: string;
     linkedChildrenIds?: string[];
     attendanceStats?: {
         bookedThisWeek: number;

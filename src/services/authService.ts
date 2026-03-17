@@ -24,6 +24,7 @@ export interface LoginSuccess {
         email: string;
         role: string;
         permissions: string[];
+        organizationId?: string;
     };
 }
 
@@ -77,7 +78,8 @@ const MOCK_ACCOUNTS: Record<string, LoginSuccess> = {
                 "center.search",
                 "center.manage",
                 "classes.view",
-            ]
+            ],
+            organizationId: "org-uuid"
         }
     },
     "manager@edu.com": {
@@ -95,7 +97,8 @@ const MOCK_ACCOUNTS: Record<string, LoginSuccess> = {
                 "schedule.manage",
                 "benefit.manage",
                 "faq.manage"
-            ]
+            ],
+            organizationId: "org-uuid"
         }
     }
 };

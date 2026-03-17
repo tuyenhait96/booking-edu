@@ -12,7 +12,8 @@ import { Center } from '@/types';
 interface CenterManagerFormValues {
     fullName: string;
     email: string;
-    centerId: string;
+    phone: string;
+    centerIds: string[];
 }
 
 interface CreateCenterManagerModalProps {
@@ -20,21 +21,28 @@ interface CreateCenterManagerModalProps {
     onClose: () => void;
     onSuccess: (data: CenterManagerFormValues) => void;
     centers: Center[];
+    initialCenterId?: string;
 }
 
 export const CreateCenterManagerModal: React.FC<CreateCenterManagerModalProps> = ({
     isOpen,
     onClose,
     onSuccess,
-    centers
+    centers,
+    initialCenterId
 }) => {
     const { register, handleSubmit, reset, control, formState: { errors } } = useForm<CenterManagerFormValues>();
 
     useEffect(() => {
         if (isOpen) {
-            reset({ fullName: '', email: '', centerId: '' });
+            reset({ 
+                fullName: '', 
+                email: '', 
+                phone: '', 
+                centerIds: initialCenterId ? [initialCenterId] : [] 
+            });
         }
-    }, [isOpen, reset]);
+    }, [isOpen, reset, initialCenterId]);
 
     const onSubmit = (data: CenterManagerFormValues) => {
         onSuccess(data);
@@ -82,18 +90,29 @@ export const CreateCenterManagerModal: React.FC<CreateCenterManagerModalProps> =
                 </div>
 
                 <div className="space-y-2">
-                    <Label className="font-bold text-slate-700 dark:text-slate-300">Assign Center</Label>
+                    <Label className="font-bold text-slate-700 dark:text-slate-300">Phone Number</Label>
+                    <Input
+                        {...register('phone', { required: "Phone is required" })}
+                        placeholder="e.g. 0901234567"
+                        className="h-12 border-slate-200 dark:border-slate-800 focus:ring-primary"
+                    />
+                    {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
+                </div>
+
+                <div className="space-y-2">
+                    <Label className="font-bold text-slate-700 dark:text-slate-300">Assign Centers</Label>
                     <Controller
-                        name="centerId"
+                        name="centerIds"
                         control={control}
-                        rules={{ required: "Center is required" }}
+                        rules={{ required: "At least one center is required" }}
                         render={({ field }) => (
                             <Select
+                                isMulti
                                 options={centerOptions}
-                                placeholder="Select a center"
-                                value={centerOptions.find(opt => opt.value === field.value)}
-                                onChange={(val) => field.onChange((val as Option)?.value)}
-                                error={errors.centerId?.message}
+                                placeholder="Select centers"
+                                value={centerOptions.filter(opt => field.value?.includes(opt.value))}
+                                onChange={(val) => field.onChange((val as Option[])?.map(opt => opt.value) || [])}
+                                error={errors.centerIds?.message}
                             />
                         )}
                     />

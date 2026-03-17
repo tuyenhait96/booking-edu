@@ -9,7 +9,7 @@ export interface Option {
     label: string;
 }
 
-interface CustomSelectProps extends SelectProps<Option, false, GroupBase<Option>> {
+interface CustomSelectProps extends SelectProps<Option, boolean, GroupBase<Option>> {
     className?: string;
     label?: string;
     error?: string;
@@ -20,11 +20,12 @@ export const Select: React.FC<CustomSelectProps> = ({
     label,
     error,
     instanceId,
+    isMulti,
     ...props
 }) => {
     const id = useId();
     // Custom styles for react-select to match the design system
-    const customStyles: StylesConfig<Option, false, GroupBase<Option>> = {
+    const customStyles: StylesConfig<Option, boolean, GroupBase<Option>> = {
         control: (base) => ({
             ...base,
             backgroundColor: 'transparent',
@@ -53,6 +54,28 @@ export const Select: React.FC<CustomSelectProps> = ({
         singleValue: (base) => ({
             ...base,
             color: 'inherit',
+        }),
+        multiValue: (base) => ({
+            ...base,
+            backgroundColor: 'rgba(103, 111, 203, 0.1)',
+            borderRadius: '0.375rem',
+            margin: '2px',
+        }),
+        multiValueLabel: (base) => ({
+            ...base,
+            color: 'rgb(103, 111, 203)',
+            fontSize: '0.75rem',
+            fontWeight: '600',
+            padding: '2px 6px',
+        }),
+        multiValueRemove: (base) => ({
+            ...base,
+            color: 'rgb(103, 111, 203)',
+            borderRadius: '0.375rem',
+            '&:hover': {
+                backgroundColor: 'rgb(103, 111, 203)',
+                color: 'white',
+            },
         }),
         indicatorsContainer: (base) => ({
             ...base,
@@ -126,6 +149,8 @@ export const Select: React.FC<CustomSelectProps> = ({
                     instanceId={instanceId || id}
                     styles={customStyles}
                     unstyled
+                    isMulti={isMulti}
+                    isClearable={false}
                     classNames={{
                         control: () => "flex items-center",
                         container: () => "w-full",

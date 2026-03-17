@@ -12,16 +12,14 @@ interface CenterDetailDrawerProps {
     isOpen: boolean;
     onClose: () => void;
     center: Center | null;
-    onCreateClass: () => void;
-    onCreateClassroom: () => void;
+    onCreateManager: () => void;
 }
 
 export const CenterDetailDrawer: React.FC<CenterDetailDrawerProps> = ({
     isOpen,
     onClose,
     center,
-    onCreateClass,
-    onCreateClassroom
+    onCreateManager
 }) => {
     if (!center) return null;
 
@@ -127,18 +125,10 @@ export const CenterDetailDrawer: React.FC<CenterDetailDrawerProps> = ({
                     <div className="p-6 border-t border-slate-100 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-800/50 flex flex-col gap-3">
                         <Button
                             className="w-full h-14 text-base font-bold shadow-lg shadow-primary/25 rounded-2xl flex items-center justify-center gap-2 group"
-                            onClick={onCreateClass}
+                            onClick={onCreateManager}
                         >
-                            <Icon name="add" className="text-xl group-hover:rotate-90 transition-transform duration-300" />
-                            <span>Create New Class</span>
-                        </Button>
-                        <Button
-                            variant="outline"
-                            className="w-full h-14 text-base font-bold border-2 rounded-2xl flex items-center justify-center gap-2 group"
-                            onClick={onCreateClassroom}
-                        >
-                            <Icon name="add" className="text-xl group-hover:rotate-90 transition-transform duration-300" />
-                            <span>Create New Classroom</span>
+                            <Icon name="person_add" className="text-xl group-hover:scale-110 transition-transform duration-300" />
+                            <span>Create Center Manager Account</span>
                         </Button>
                     </div>
                 </div>
