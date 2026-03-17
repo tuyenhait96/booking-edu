@@ -20,6 +20,8 @@ import resourceService from '@/services/resourceService';
 import { formatPhone } from '@/utils/format';
 import { PERMISSIONS } from '@/utils/permissions';
 import PermissionGuard from '@/components/auth/PermissionGuard';
+import { CreateCenterManagerModal } from '@/components/organisms/CreateCenterManagerModal/CreateCenterManagerModal';
+import { useRouter } from 'next/navigation';
 
 export default function CentersPage() {
     const queryClient = useQueryClient();
@@ -31,6 +33,8 @@ export default function CentersPage() {
     const [selectedCenter, setSelectedCenter] = useState<Center | null>(null);
     const [isCreateClassModalOpen, setIsCreateClassModalOpen] = useState(false);
     const [isCreateClassroomModalOpen, setIsCreateClassroomModalOpen] = useState(false);
+    const [isCreateManagerModalOpen, setIsCreateManagerModalOpen] = useState(false);
+    const router = useRouter();
     const itemsPerPage = 5;
 
     // ... (centers query)
@@ -151,6 +155,26 @@ export default function CentersPage() {
         }
     });
 
+    // Create Manager mutation
+    const createManagerMutation = useMutation({
+        mutationFn: centerService.createCenterManager,
+        onSuccess: (response) => {
+            toast({
+                title: 'Success',
+                description: response.message || 'Center manager account created successfully',
+                variant: 'success'
+            });
+            setIsCreateManagerModalOpen(false);
+        },
+        onError: () => {
+            toast({
+                title: 'Error',
+                description: 'Failed to create center manager account',
+                variant: 'error'
+            });
+        }
+    });
+
     const columns: Column<Center>[] = [
         {
             header: 'Center Name',
@@ -215,6 +239,16 @@ export default function CentersPage() {
                             <Icon name="delete" />
                         </button>
                     </PermissionGuard>
+                    <button
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            router.push(`/centers/${item.id}/stats`);
+                        }}
+                        className="text-slate-400 hover:text-emerald-600 p-1"
+                        title="Statistics"
+                    >
+                        <Icon name="trending_up" />
+                    </button>
                 </div>
             )
         }
@@ -230,15 +264,27 @@ export default function CentersPage() {
                             Manage all learning centers under your organization.
                         </p>
                     </div>
-                    <PermissionGuard requiredPermission={PERMISSIONS.CENTER_CREATE}>
-                        <Button
-                            className="flex items-center gap-2"
-                            onClick={() => setIsCreateModalOpen(true)}
-                        >
-                            <Icon name="add" className="text-lg" />
-                            <span>Create New Center</span>
-                        </Button>
-                    </PermissionGuard>
+                    <div className="flex items-center gap-3">
+                        <PermissionGuard requiredPermission={PERMISSIONS.CENTER_CREATE}>
+                            <Button
+                                variant="outline"
+                                className="flex items-center gap-2 border-primary text-primary hover:bg-primary/5"
+                                onClick={() => setIsCreateManagerModalOpen(true)}
+                            >
+                                <Icon name="person_add" className="text-lg" />
+                                <span>Create Center Manager Account</span>
+                            </Button>
+                        </PermissionGuard>
+                        <PermissionGuard requiredPermission={PERMISSIONS.CENTER_CREATE}>
+                            <Button
+                                className="flex items-center gap-2"
+                                onClick={() => setIsCreateModalOpen(true)}
+                            >
+                                <Icon name="add" className="text-lg" />
+                                <span>Create New Center</span>
+                            </Button>
+                        </PermissionGuard>
+                    </div>
                 </div>
 
                 <div className="bg-white dark:bg-slate-900 rounded-3xl border border-slate-200 dark:border-slate-800 p-2 shadow-sm">
@@ -325,6 +371,14 @@ export default function CentersPage() {
                         centerId={selectedCenter.id}
                     />
                 )}
+
+                {/* Create Center Manager Modal */}
+                <CreateCenterManagerModal
+                    isOpen={isCreateManagerModalOpen}
+                    onClose={() => setIsCreateManagerModalOpen(false)}
+                    centers={centers}
+                    onSuccess={(data) => createManagerMutation.mutate(data)}
+                />
 
                 <ToastContainer toasts={toasts} removeToast={removeToast} />
             </div>

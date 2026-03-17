@@ -92,6 +92,41 @@ const centerService = {
                 data: center
             };
         }
+    },
+
+    createCenterManager: async (payload: { fullName: string; email: string; centerId: string }): Promise<ApiResponse<void>> => {
+        // Mock implementation
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve({
+                    status: 201,
+                    success: true,
+                    message: 'Center manager account created successfully',
+                    data: undefined
+                });
+            }, 500);
+        });
+    },
+
+    getCenterStats: async (centerId: string): Promise<ApiResponse<any>> => {
+        // Mock implementation
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                resolve({
+                    status: 200,
+                    success: true,
+                    data: {
+                        centerId,
+                        totalStudents: 156,
+                        activeClasses: 12,
+                        totalRevenue: 45000,
+                        attendanceRate: 94.5,
+                        monthlyGrowth: 8.2,
+                        upcomingSessions: 5
+                    }
+                });
+            }, 500);
+        });
     }
 };
 
