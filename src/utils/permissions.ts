@@ -41,6 +41,13 @@ export const PERMISSIONS = {
     ROLE_UPDATE: "role.update",
     ROLE_DELETE: "role.delete",
     ROLE_SEARCH: "role.search",
+
+    // Center Management (Expanded)
+    TEACHER_MANAGE: "teacher.manage",
+    PARENT_MANAGE: "parent.manage",
+    SCHEDULE_MANAGE: "schedule.manage",
+    BENEFIT_MANAGE: "benefit.manage",
+    FAQ_MANAGE: "faq.manage",
 } as const;
 
 export type Permission = typeof PERMISSIONS[keyof typeof PERMISSIONS];
@@ -94,6 +101,16 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
             { key: PERMISSIONS.ROLE_UPDATE, label: "Update Roles" },
             { key: PERMISSIONS.ROLE_DELETE, label: "Delete Roles" },
             { key: PERMISSIONS.ROLE_SEARCH, label: "Search Roles" },
+        ]
+    },
+    {
+        name: "Center Administration",
+        permissions: [
+            { key: PERMISSIONS.TEACHER_MANAGE, label: "Manage Teachers" },
+            { key: PERMISSIONS.PARENT_MANAGE, label: "Manage Parents" },
+            { key: PERMISSIONS.SCHEDULE_MANAGE, label: "Manage Schedules" },
+            { key: PERMISSIONS.BENEFIT_MANAGE, label: "Manage Benefits" },
+            { key: PERMISSIONS.FAQ_MANAGE, label: "Manage FAQs" },
         ]
     },
 ];

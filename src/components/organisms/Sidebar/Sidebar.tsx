@@ -30,6 +30,17 @@ const NAV_ITEMS: NavItemConfig[] = [
     { href: '/centers', icon: 'storefront', label: 'Centers', permission: PERMISSIONS.CENTER_MANAGE },
     { href: '/classes', icon: 'school', label: 'Classes', permission: PERMISSIONS.CLASSES_VIEW },
     {
+        label: 'Center Management',
+        permission: PERMISSIONS.TEACHER_MANAGE,
+        items: [
+            { href: '/teachers', icon: 'teacher', label: 'Teachers', permission: PERMISSIONS.TEACHER_MANAGE },
+            { href: '/parents', icon: 'parent', label: 'Parents', permission: PERMISSIONS.PARENT_MANAGE },
+            { href: '/schedules', icon: 'schedule', label: 'Schedules', permission: PERMISSIONS.SCHEDULE_MANAGE },
+            { href: '/benefits', icon: 'benefit', label: 'Benefits', permission: PERMISSIONS.BENEFIT_MANAGE },
+            { href: '/faqs', icon: 'faq', label: 'FAQs', permission: PERMISSIONS.FAQ_MANAGE },
+        ]
+    },
+    {
         label: 'Tools & Settings',
         hideLabel: true,
         permission: PERMISSIONS.ROLE_VIEW,
@@ -62,6 +73,14 @@ export const Sidebar: React.FC = () => {
                 item.label === 'Dashboard' ||
                 item.label === 'Centers' ||
                 item.label === 'Classes'
+            );
+        }
+
+        if (user?.role === 'CENTER_MANAGER') {
+            return NAV_ITEMS.filter(item =>
+                item.label === 'Dashboard' ||
+                item.label === 'Classes' ||
+                item.label === 'Center Management'
             );
         }
 

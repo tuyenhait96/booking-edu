@@ -89,7 +89,12 @@ const MOCK_ACCOUNTS: Record<string, LoginSuccess> = {
             permissions: [
                 "calendar.view",
                 "booking.view",
-                "attendance.absence.monitor"
+                "attendance.absence.monitor",
+                "teacher.manage",
+                "parent.manage",
+                "schedule.manage",
+                "benefit.manage",
+                "faq.manage"
             ]
         }
     }

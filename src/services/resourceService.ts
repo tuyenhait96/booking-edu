@@ -157,9 +157,53 @@ const resourceService = {
         }
     },
 
-    createClassroom: async (classroom: Partial<Classroom>): Promise<ApiResponse<Classroom>> => {
+    async createClassroom(classroom: Partial<Classroom>): Promise<ApiResponse<Classroom>> {
         const { data } = await axiosInstance.post<ApiResponse<Classroom>>("/classrooms", classroom);
         return data;
+    },
+
+    getBenefits: async (): Promise<ApiResponse<any[]>> => {
+        return {
+            status: 200,
+            error: null,
+            data: [
+                { id: "1", title: "Free Trial", description: "First session is free for new students.", isActive: true },
+                { id: "2", title: "Sibling Discount", description: "10% off for the second child.", isActive: true },
+                { id: "3", title: "Early Bird", description: "5% discount for payments 1 month in advance.", isActive: true },
+                { id: "4", title: "Referral Bonus", description: "$20 credit for each successful referral.", isActive: true },
+                { id: "5", title: "Summer Special", description: "Bundle 10 classes and get 2 free.", isActive: false }
+            ]
+        };
+    },
+
+    createBenefit: async (payload: any): Promise<ApiResponse<any>> => {
+        return {
+            status: 201,
+            success: true,
+            data: { ...payload, id: Math.random().toString(36).substr(2, 9), isActive: true }
+        };
+    },
+
+    getFAQs: async (): Promise<ApiResponse<any[]>> => {
+        return {
+            status: 200,
+            error: null,
+            data: [
+                { id: "1", question: "What is the fee structure?", answer: "Fees vary by subject and level. Contact us for details.", isActive: true },
+                { id: "2", question: "Where are the centers located?", answer: "We have centers in Jurong, Tampines, and Bishan.", isActive: true },
+                { id: "3", question: "Are parents allowed in class?", answer: "We allow observing for the first 15 minutes of trial sessions.", isActive: true },
+                { id: "4", question: "What is the refund policy?", answer: "Cancellations must be made 24 hours in advance for a credit.", isActive: true },
+                { id: "5", question: "Do you offer online classes?", answer: "Yes, hybrid and fully online options are available.", isActive: true }
+            ]
+        };
+    },
+
+    createFAQ: async (payload: any): Promise<ApiResponse<any>> => {
+        return {
+            status: 201,
+            success: true,
+            data: { ...payload, id: Math.random().toString(36).substr(2, 9), isActive: true }
+        };
     }
 };
 
